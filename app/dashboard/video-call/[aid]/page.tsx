@@ -163,18 +163,9 @@ export default function PatientVideoCallPage() {
           setShowPostCallScreen(true);
         },
         onJoinRoom: () => {
-          console.log('[PATIENT] Successfully joined room!');
+          console.log('[PATIENT] Successfully joined room! Waiting for synchronized timer...');
           clearTimeout(timeoutId);
-          const startTime = new Date();
-          setCallStartTime(startTime);
-          
-          // Start live timer (updates every second)
-          const timer = setInterval(() => {
-            const now = new Date();
-            const elapsed = Math.floor((now.getTime() - startTime.getTime()) / 1000);
-            setCallDurationSeconds(elapsed);
-          }, 1000);
-          setLiveTimerInterval(timer);
+          pollForStartTime();
         },
         onUserJoin: (users: any) => {
           console.log('[PATIENT] User joined:', users);
@@ -201,6 +192,58 @@ export default function PatientVideoCallPage() {
         router.push('/dashboard/appointments');
       }, 3000);
     }
+  }
+
+  async function pollForStartTime() {
+    // Check immediately
+    const startTime = await checkCallStatus();
+    if (startTime) {
+      startTimer(startTime);
+      return;
+    }
+
+    // Poll every 2 seconds until started
+    const pollInterval = setInterval(async () => {
+      const time = await checkCallStatus();
+      if (time) {
+        clearInterval(pollInterval);
+        startTimer(time);
+      }
+    }, 2000); // Check every 2 seconds
+
+    // Store interval to clear on unmount
+    // We can use a ref or just let it run until found/unmount
+  }
+
+  async function checkCallStatus() {
+    try {
+        const response = await fetch(`/api/appointments/${aid}/status`);
+        const data = await response.json();
+        
+        if (data.success && data.data?.call_started_at) {
+            return new Date(data.data.call_started_at);
+        }
+        return null;
+    } catch (error) {
+        console.error('[PATIENT] Failed to check status:', error);
+        return null;
+    }
+  }
+
+  function startTimer(startTime: Date) {
+    console.log('[PATIENT] Syncing timer with server start time:', startTime);
+    setCallStartTime(startTime);
+    
+    // Clear existing if any
+    if (liveTimerInterval) clearInterval(liveTimerInterval);
+
+    // Start live timer
+    const timer = setInterval(() => {
+      const now = new Date();
+      const elapsed = Math.floor((now.getTime() - startTime.getTime()) / 1000);
+      setCallDurationSeconds(elapsed >= 0 ? elapsed : 0);
+    }, 1000);
+    setLiveTimerInterval(timer);
   }
 
   async function updateCallDuration(startTime: Date, endTime: Date, durationMinutes: number) {

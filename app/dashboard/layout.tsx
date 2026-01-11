@@ -3,6 +3,7 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { Home, Calendar, User, FileText, LogOut, Pill } from 'lucide-react';
 import Link from 'next/link';
 import PatientProfilePicture from '../components/ProfilePicture';
+import LiveCallNotifier from './components/LiveCallNotifier';
 
 export default async function DashboardLayout({
   children,
@@ -30,11 +31,9 @@ export default async function DashboardLayout({
       {/* Sidebar */}
       <aside className="w-64 glass-card border-r border-gray-200/50 min-h-screen sticky top-0 flex flex-col">
         <div className="p-6">
-          <Link href="/dashboard" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-500 rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-xl">A</span>
-            </div>
-            <span className="text-xl font-bold gradient-text">AuraSutra</span>
+          <Link href="/dashboard" className="flex items-center space-x-1">
+            <img src="/Logos/logo_transparent.png" alt="AuraSutra" className="h-12" />
+            <span className="text-2xl font-semibold" style={{ fontFamily: 'Alatsi, sans-serif' }}>AuraSutra</span>
           </Link>
         </div>
 
@@ -79,7 +78,8 @@ export default async function DashboardLayout({
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50">
+        <LiveCallNotifier />
         <div className="p-8">{children}</div>
       </main>
     </div>

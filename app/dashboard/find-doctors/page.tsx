@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Search, User, Award, MapPin, Star, Sparkles, Filter } from 'lucide-react';
+import { Search, User, Award, MapPin } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import DoctorProfileModal from '../components/DoctorProfileModal';
 
 interface Doctor {
   did: string;
@@ -30,6 +31,7 @@ export default function FindDoctorsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSpecialization, setSelectedSpecialization] = useState('all');
   const [selectedCity, setSelectedCity] = useState('all');
+  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
 
   useEffect(() => {
     fetchDoctors();
@@ -61,36 +63,31 @@ export default function FindDoctorsPage() {
   function filterDoctors() {
     let filtered = [...doctors];
 
-    // Search filter
     if (searchTerm) {
-      const term = searchTerm.toLowerCase();
+      const search = searchTerm.toLowerCase();
       filtered = filtered.filter((doctor) => {
         const name = doctor.user?.name?.toLowerCase() || '';
-        const specs = doctor.specialization?.join(' ').toLowerCase() || '';
-        const customSpecs = doctor.custom_specializations?.toLowerCase() || '';
         const city = doctor.city?.toLowerCase() || '';
-        const bio = doctor.bio?.toLowerCase() || '';
-
+        const state = doctor.state?.toLowerCase() || '';
+        const specializations = (doctor.specialization || []).join(' ').toLowerCase();
+        const customSpecs = doctor.custom_specializations?.toLowerCase() || '';
+        
         return (
-          name.includes(term) ||
-          specs.includes(term) ||
-          customSpecs.includes(term) ||
-          city.includes(term) ||
-          bio.includes(term)
+          name.includes(search) ||
+          city.includes(search) ||
+          state.includes(search) ||
+          specializations.includes(search) ||
+          customSpecs.includes(search)
         );
       });
     }
 
-    // Specialization filter
     if (selectedSpecialization !== 'all') {
       filtered = filtered.filter((doctor) =>
-        doctor.specialization?.some((spec) =>
-          spec.toLowerCase().includes(selectedSpecialization.toLowerCase())
-        )
+        doctor.specialization?.includes(selectedSpecialization)
       );
     }
 
-    // City filter
     if (selectedCity !== 'all') {
       filtered = filtered.filter((doctor) => doctor.city === selectedCity);
     }
@@ -98,7 +95,6 @@ export default function FindDoctorsPage() {
     setFilteredDoctors(filtered);
   }
 
-  // Get unique specializations and cities for filters
   const allSpecializations = Array.from(
     new Set(doctors.flatMap((d) => d.specialization || []))
   ).sort();
@@ -114,180 +110,190 @@ export default function FindDoctorsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center space-x-2">
-            <Sparkles className="w-8 h-8 text-primary-600" />
-            <span>Find Ayurvedic Doctors</span>
-          </h1>
-          <p className="text-gray-600">
-            Browse verified Ayurvedic practitioners and find the perfect match for your health needs
-          </p>
-        </div>
+      <DoctorProfileModal 
+        doctor={selectedDoctor}
+        isOpen={!!selectedDoctor}
+        onClose={() => setSelectedDoctor(null)}
+      />
+
+      {/* Compact Header */}
+      <div className="mb-4">
+        <h1 className="text-3xl font-black text-gray-900 mb-1">Find Ayurvedic Doctors</h1>
+        <p className="text-gray-600 text-sm">Connect with verified Ayurvedic practitioners</p>
       </div>
 
       {/* Search and Filters */}
-      <div className="glass-card p-6 rounded-2xl space-y-4">
-        {/* Search Bar */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-primary-500" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search by name, specialization, location, or condition..."
-            className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500"
+            placeholder="Search by doctor name, specialization, or location..."
+            className="w-full pl-14 pr-4 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:bg-white transition-all font-medium"
           />
         </div>
 
-        {/* Filters */}
-        <div className="grid md:grid-cols-3 gap-4">
-          {/* Specialization Filter */}
+        <div className="grid md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center space-x-1">
-              <Filter className="w-4 h-4" />
-              <span>Specialization</span>
-            </label>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Specialization</label>
             <select
               value={selectedSpecialization}
               onChange={(e) => setSelectedSpecialization(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500"
+              className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:bg-white transition-all font-medium"
             >
               <option value="all">All Specializations</option>
               {allSpecializations.map((spec) => (
-                <option key={spec} value={spec}>
-                  {spec}
-                </option>
+                <option key={spec} value={spec}>{spec}</option>
               ))}
             </select>
           </div>
 
-          {/* City Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center space-x-1">
-              <MapPin className="w-4 h-4" />
-              <span>City</span>
-            </label>
+            <label className="block text-sm font-bold text-gray-700 mb-2">City</label>
             <select
               value={selectedCity}
               onChange={(e) => setSelectedCity(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500"
+              className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:bg-white transition-all font-medium"
             >
               <option value="all">All Cities</option>
               {allCities.map((city) => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
+                <option key={city} value={city}>{city}</option>
               ))}
             </select>
-          </div>
-
-          {/* Results Count */}
-          <div className="flex items-end">
-            <div className="w-full px-4 py-2 bg-primary-50 rounded-lg text-center">
-              <span className="text-2xl font-bold text-primary-600">{filteredDoctors.length}</span>
-              <p className="text-xs text-gray-600">Doctors Found</p>
-            </div>
           </div>
         </div>
       </div>
 
-      {/* Doctors List */}
+      {/* Doctor Cards */}
       {filteredDoctors.length === 0 ? (
-        <div className="glass-card p-12 rounded-2xl text-center">
+        <div className="text-center py-16">
           <User className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-gray-900 mb-2">No doctors found</h3>
-          <p className="text-gray-600">
+          <p className="text-gray-600 font-medium">
             {searchTerm || selectedSpecialization !== 'all' || selectedCity !== 'all'
-              ? 'Try adjusting your filters to see more results'
-              : 'No doctors are currently available in the database'}
+              ? 'No doctors found matching your criteria'
+              : 'No doctors are currently available'}
           </p>
         </div>
       ) : (
-        <div className="grid md:grid-cols-2 gap-6">
-          {filteredDoctors.map((doctor) => (
-            <div key={doctor.did} className="glass-card-hover p-6 rounded-2xl">
-              <div className="flex items-start space-x-4">
-                {doctor.user?.profile_image_url ? (
-                  <img
-                    src={doctor.user.profile_image_url}
-                    alt={doctor.user?.name || 'Doctor'}
-                    className="w-16 h-16 rounded-xl object-cover flex-shrink-0"
-                  />
-                ) : (
-                  <div className="w-16 h-16 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <User className="w-8 h-8 text-primary-600" />
-                  </div>
-                )}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredDoctors.map((doctor) => {
+            const remainingSpecs = doctor.specialization?.length > 3 ? doctor.specialization.length - 3 : 0;
+            
+            return (
+              <div 
+                key={doctor.did} 
+                onClick={() => setSelectedDoctor(doctor)}
+                className="group relative h-[400px] bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 cursor-pointer"
+              >
+                {/* Background Image */}
+                <div className="absolute inset-0 z-0">
+                  {doctor.user?.profile_image_url ? (
+                    <img
+                      src={doctor.user.profile_image_url}
+                      alt={doctor.user?.name || 'Doctor'}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-primary-100 to-emerald-200 flex items-center justify-center">
+                      <User className="w-32 h-32 text-white opacity-20" />
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-40 transition-opacity duration-300"></div>
+                </div>
 
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-lg font-bold text-gray-900 mb-1">
+                {/* Bottom Info (Always Visible) */}
+                <div className="absolute bottom-0 left-0 right-0 p-8 text-white z-10 translate-y-2 group-hover:translate-y-full transition-transform duration-300">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Award className="w-5 h-5 text-primary-300" />
+                    <span className="text-xs font-bold tracking-wide bg-white/20 px-2 py-1 rounded-md backdrop-blur-md">
+                      {doctor.years_of_experience}y Experience
+                    </span>
+                  </div>
+                  <h3 className="text-3xl font-black mb-1 drop-shadow-md truncate">
                     {doctor.user?.name || 'Doctor'}
                   </h3>
-
-                  <div className="flex items-center space-x-2 text-sm text-gray-600 mb-2">
-                    <Award className="w-4 h-4 flex-shrink-0" />
-                    <span className="font-medium">{doctor.qualification}</span>
-                  </div>
-
-                  {/* Specializations */}
-                  <div className="flex flex-wrap gap-1 mb-3">
+                  <p className="text-xs font-bold text-primary-100 tracking-wide mb-2">
+                    {doctor.qualification}
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-3">
                     {doctor.specialization?.slice(0, 2).map((spec, idx) => (
                       <span
                         key={idx}
-                        className="px-2 py-1 bg-primary-100 text-primary-700 rounded-full text-xs font-medium"
+                        className="px-2 py-1 bg-white/20 backdrop-blur-md text-white rounded-full text-xs font-bold"
                       >
                         {spec}
                       </span>
                     ))}
-                    {doctor.specialization?.length > 2 && (
-                      <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
-                        +{doctor.specialization.length - 2} more
-                      </span>
-                    )}
                   </div>
+                  {doctor.bio && (
+                    <p className="text-gray-100 text-xs line-clamp-2 opacity-90">
+                      {doctor.bio}
+                    </p>
+                  )}
+                </div>
 
-                  {/* Details */}
-                  <div className="space-y-1 text-sm text-gray-600 mb-3">
-                    <div className="flex items-center space-x-2">
-                      <span>📍</span>
-                      <span>
-                        {doctor.city && doctor.state
-                          ? `${doctor.city}, ${doctor.state}`
-                          : 'Location not specified'}
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <span>💼</span>
-                      <span>{doctor.years_of_experience} years experience</span>
-                    </div>
-                    {doctor.languages && doctor.languages.length > 0 && (
-                      <div className="flex items-center space-x-2">
-                        <span>🗣️</span>
-                        <span>{doctor.languages.slice(0, 3).join(', ')}</span>
+                {/* Hover Overlay */}
+                <div className="absolute inset-0 bg-black/80 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center p-8 text-center z-20 transform scale-95 group-hover:scale-100">
+                  <div className="w-20 h-20 rounded-3xl overflow-hidden border-2 border-white mb-4 shadow-xl">
+                    {doctor.user?.profile_image_url ? (
+                      <img src={doctor.user.profile_image_url} className="w-full h-full object-cover" alt={doctor.user.name} />
+                    ) : (
+                      <div className="w-full h-full bg-primary-100 flex items-center justify-center">
+                        <User className="w-10 h-10 text-primary-600" />
                       </div>
                     )}
                   </div>
-
-                  {/* Fee and Book Button */}
-                  <div className="flex items-center justify-between pt-3 border-t border-gray-200">
-                    <div>
-                      <span className="text-2xl font-bold text-primary-600">
-                        ₹{doctor.consultation_fee}
+                  
+                  <h3 className="text-white font-black text-2xl mb-1">{doctor.user?.name}</h3>
+                  <p className="text-primary-100 text-xs font-bold tracking-wide mb-2">
+                    {doctor.qualification}
+                  </p>
+                  
+                  <div className="flex flex-wrap gap-2 justify-center mb-4">
+                    {doctor.specialization?.slice(0, 3).map((spec, idx) => (
+                      <span
+                        key={idx}
+                        className="px-3 py-1 bg-white/10 border border-white/20 text-white rounded-full text-xs font-bold"
+                      >
+                        {spec}
                       </span>
-                      <span className="text-xs text-gray-500 ml-1">/ consultation</span>
+                    ))}
+                    {remainingSpecs > 0 && (
+                      <span className="px-3 py-1 bg-primary-500/30 border border-primary-300/50 text-primary-100 rounded-full text-xs font-bold">
+                        +{remainingSpecs} more
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 py-4 border-y border-white/10 w-full mb-6">
+                    <div className="text-center">
+                      <MapPin className="w-4 h-4 text-emerald-400 mx-auto mb-1" />
+                      <p className="text-xs font-bold text-gray-400 mb-1">Location</p>
+                      <p className="text-xs font-bold text-white truncate">{doctor.city}, {doctor.state}</p>
                     </div>
-                    <Link
-                      href={`/dashboard/book-appointment?did=${doctor.did}`}
-                      className="px-4 py-2 bg-gradient-to-r from-secondary-600 to-secondary-500 text-white rounded-lg font-semibold hover:shadow-lg smooth-transition"
-                    >
-                      Book Now
-                    </Link>
+                    <div className="text-center">
+                      <div className="w-4 h-4 mx-auto mb-1 text-primary-400">🗣️</div>
+                      <p className="text-xs font-bold text-gray-400 mb-1">Languages</p>
+                      <p className="text-xs font-bold text-white truncate">{(doctor.languages || []).slice(0, 2).join(', ')}</p>
+                    </div>
+                  </div>
+
+                  <div className="w-full space-y-3">
+                    <div className="flex items-baseline justify-center space-x-2 mb-3">
+                      <span className="text-3xl font-black text-white">₹{doctor.consultation_fee}</span>
+                      <span className="text-xs text-gray-400">Consultation</span>
+                    </div>
+                    
+                    <div className="text-xs text-gray-400">
+                      Click to view full profile
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

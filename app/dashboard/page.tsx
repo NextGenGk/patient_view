@@ -40,6 +40,7 @@ export default function PatientDashboardPage() {
     upcomingAppointments: 0,
     activePrescriptions: 0,
     totalAppointments: 0,
+    adherenceRate: 0,
   });
   const [loading, setLoading] = useState(true);
   const [userName, setUserName] = useState('');
@@ -97,7 +98,18 @@ export default function PatientDashboardPage() {
             upcomingAppointments: data.upcomingAppointments || 0,
             activePrescriptions: data.activePrescriptions || 0,
             totalAppointments: data.totalAppointments || 0,
+            adherenceRate: data.adherenceRate || 0,
           });
+          
+          // Set adherence trend data if available
+          if (data.adherenceTrend && data.adherenceTrend.length > 0) {
+            setAdherenceData(data.adherenceTrend);
+          }
+          
+          // Set medicine-wise data if available
+          if (data.medicineAdherence && data.medicineAdherence.length > 0) {
+            setMedicineData(data.medicineAdherence);
+          }
         }
       }
     } catch (error) {
@@ -137,7 +149,7 @@ export default function PatientDashboardPage() {
             )}
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-semibold text-gray-900">
               {greeting}, {userName}! 👋
             </h1>
             <p className="text-gray-600 mt-1">We hope you're feeling well today</p>
@@ -214,7 +226,7 @@ export default function PatientDashboardPage() {
               <h2 className="text-lg font-bold text-gray-900">
                 Weekly Medication Trend
               </h2>
-              <Activity className="w-5 h-5 text-gray-400" />
+              <img src="/Logos/logo_emblem_total black+transparent.png" alt="AuraSutra" className="h-5" />
             </div>
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={adherenceData}>
@@ -308,7 +320,7 @@ export default function PatientDashboardPage() {
             className="flex items-center space-x-3 p-4 rounded-xl bg-gradient-to-br from-primary-50 to-primary-100/50 hover:shadow-lg smooth-transition group"
           >
             <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center group-hover:scale-110 smooth-transition">
-              <Activity className="w-5 h-5 text-primary-600" />
+              <img src="/Logos/logo_emblem_total black+transparent.png" alt="AuraSutra" className="h-5" />
             </div>
             <span className="font-medium text-gray-900">AI Doctor Search</span>
           </Link>
@@ -331,6 +343,16 @@ export default function PatientDashboardPage() {
               <FileText className="w-5 h-5 text-accent-600" />
             </div>
             <span className="font-medium text-gray-900">View Prescriptions</span>
+          </Link>
+
+          <Link
+            href="/dashboard/medications"
+            className="flex items-center space-x-3 p-4 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100/50 hover:shadow-lg smooth-transition group"
+          >
+            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center group-hover:scale-110 smooth-transition">
+              <Pill className="w-5 h-5 text-emerald-600" />
+            </div>
+            <span className="font-medium text-gray-900">Check Adherence</span>
           </Link>
 
           <Link
