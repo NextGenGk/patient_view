@@ -4,6 +4,7 @@ import { Home, Calendar, User, FileText, LogOut, Pill } from 'lucide-react';
 import Link from 'next/link';
 import PatientProfilePicture from '../components/ProfilePicture';
 import LiveCallNotifier from './components/LiveCallNotifier';
+import { supabase } from '@/lib/shared/supabase';
 
 export default async function DashboardLayout({
   children,
@@ -17,6 +18,20 @@ export default async function DashboardLayout({
   }
 
   const user = await getUser();
+
+  // Check user role from database
+  if (user?.id) {
+    const { data: userData, error } = await supabase
+      .from('users')
+      .select('role')
+      .eq('auth_id', user.id)
+      .single();
+
+    // If user is a doctor, redirect to unauthorized page
+    if (userData?.role === 'doctor') {
+      redirect('/unauthorized');
+    }
+  }
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: Home },

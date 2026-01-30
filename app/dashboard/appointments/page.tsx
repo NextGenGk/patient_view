@@ -86,7 +86,7 @@ export default function AppointmentsPage() {
   }
 
   const upcomingAppointments = appointments.filter(
-    (apt) => apt.status === 'confirmed' || apt.status === 'pending' || apt.status === 'in_progress'
+    (apt) => apt.status === 'confirmed'
   );
   const completedAppointments = appointments.filter((apt) => apt.status === 'completed');
   const cancelledAppointments = appointments.filter((apt) => apt.status === 'cancelled');

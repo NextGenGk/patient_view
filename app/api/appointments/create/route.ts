@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
                 pid,
                 did,
                 mode,
-                status: 'scheduled',
+                status: 'confirmed',
                 scheduled_date,
                 scheduled_time,
                 chief_complaint,
@@ -125,6 +125,49 @@ export async function POST(request: NextRequest) {
                 { error: 'Failed to create appointment' },
                 { status: 500 }
             );
+        }
+
+        // Send notifications to patient and doctor
+        try {
+            const appointmentDate = new Date(scheduled_date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            console.log('📧 Sending appointment notifications...');
+            console.log('Patient ID:', pid);
+            console.log('Doctor ID:', did);
+
+            const notificationResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/notifications/send`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'appointment_created',
+                    data: {
+                        patientId: pid,
+                        doctorId: did,
+                        appointmentDate,
+                        appointmentTime: scheduled_time,
+                        mode,
+                        chiefComplaint: chief_complaint,
+                        meetingLink: appointment.meeting_link,
+                        tokenNumber: appointment.token_number,
+                    }
+                })
+            });
+
+            const notificationResult = await notificationResponse.json();
+            console.log('📧 Notification API response:', notificationResult);
+
+            if (notificationResult.success) {
+                console.log('✅ Notifications sent successfully!');
+            } else {
+                console.error('❌ Notification failed:', notificationResult.error);
+            }
+        } catch (notifError) {
+            console.error('❌ Failed to send notification:', notifError);
+            // Don't fail the appointment creation if notification fails
         }
 
         return NextResponse.json({
