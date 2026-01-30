@@ -28,6 +28,8 @@ interface DoctorProfileModalProps {
   onClose: () => void;
 }
 
+import { TranslatedText } from '../../components/TranslatedText';
+
 export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorProfileModalProps) {
   // Close on Escape key
   useEffect(() => {
@@ -83,13 +85,13 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
             
             <div className="flex-1">
               <h2 className="text-3xl font-black text-gray-900 mb-1">
-                Dr. {doctor.user.name}
+                <TranslatedText>Dr.</TranslatedText> <TranslatedText>{doctor.user.name}</TranslatedText>
               </h2>
-              <p className="text-primary-600 font-semibold mb-3">{doctor.qualification}</p>
+              <p className="text-primary-600 font-semibold mb-3"><TranslatedText>{doctor.qualification}</TranslatedText></p>
               
               <div className="flex items-center space-x-2 text-gray-600">
                 <MapPin className="w-4 h-4" />
-                <span className="text-sm">{doctor.city}, {doctor.state}</span>
+                <span className="text-sm"><TranslatedText>{doctor.city}</TranslatedText>, <TranslatedText>{doctor.state}</TranslatedText></span>
               </div>
             </div>
           </div>
@@ -101,7 +103,7 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
           <div>
             <h3 className="text-lg font-black text-gray-900 mb-3 flex items-center space-x-2">
               <Award className="w-5 h-5 text-primary-600" />
-              <span>Specializations</span>
+              <TranslatedText as="span">Specializations</TranslatedText>
             </h3>
             <div className="flex flex-wrap gap-2">
               {doctor.specialization.map((spec, index) => (
@@ -109,7 +111,7 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
                   key={index}
                   className="px-4 py-2 bg-primary-50 text-primary-700 rounded-full text-sm font-semibold border border-primary-100"
                 >
-                  {spec}
+                  <TranslatedText>{spec}</TranslatedText>
                 </span>
               ))}
             </div>
@@ -120,17 +122,17 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
             <div className="bg-gray-50 p-4 rounded-xl">
               <div className="flex items-center space-x-2 text-gray-600 mb-1">
                 <Briefcase className="w-4 h-4" />
-                <span className="text-xs font-semibold">Experience</span>
+                <TranslatedText as="span" className="text-xs font-semibold">Experience</TranslatedText>
               </div>
               <p className="text-xl font-black text-gray-900">
-                {doctor.years_of_experience} years
+                {doctor.years_of_experience} <TranslatedText>years</TranslatedText>
               </p>
             </div>
 
             <div className="bg-gray-50 p-4 rounded-xl">
               <div className="flex items-center space-x-2 text-gray-600 mb-1">
                 <DollarSign className="w-4 h-4" />
-                <span className="text-xs font-semibold">Consultation Fee</span>
+                <TranslatedText as="span" className="text-xs font-semibold">Consultation Fee</TranslatedText>
               </div>
               <p className="text-xl font-black text-primary-600">
                 ₹{doctor.consultation_fee}
@@ -143,7 +145,7 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
             <div>
               <h3 className="text-lg font-black text-gray-900 mb-3 flex items-center space-x-2">
                 <Languages className="w-5 h-5 text-primary-600" />
-                <span>Languages</span>
+                <TranslatedText as="span">Languages</TranslatedText>
               </h3>
               <div className="flex flex-wrap gap-2">
                 {doctor.languages.map((lang, index) => (
@@ -151,7 +153,7 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
                     key={index}
                     className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium"
                   >
-                    {lang}
+                    <TranslatedText>{lang}</TranslatedText>
                   </span>
                 ))}
               </div>
@@ -161,8 +163,8 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
           {/* Bio */}
           {doctor.bio && (
             <div>
-              <h3 className="text-lg font-black text-gray-900 mb-3">About Doctor</h3>
-              <p className="text-gray-700 leading-relaxed">{doctor.bio}</p>
+              <TranslatedText as="h3" className="text-lg font-black text-gray-900 mb-3">About Doctor</TranslatedText>
+              <p className="text-gray-700 leading-relaxed"><TranslatedText>{doctor.bio}</TranslatedText></p>
             </div>
           )}
 
@@ -172,7 +174,7 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
             className="block w-full px-8 py-4 bg-gradient-to-r from-primary-600 to-emerald-600 text-white rounded-2xl font-black text-center hover:shadow-2xl hover:scale-105 smooth-transition"
           >
             <Calendar className="w-5 h-5 inline-block mr-2" />
-            Book Appointment
+            <TranslatedText>Book Appointment</TranslatedText>
           </Link>
         </div>
       </div>

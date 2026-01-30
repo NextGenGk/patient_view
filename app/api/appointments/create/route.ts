@@ -29,6 +29,8 @@ export async function POST(request: NextRequest) {
             mode,
             chief_complaint,
             symptoms = [],
+            payment_id,
+            payment_status = 'pending',
         } = body;
 
         // Validate required fields
@@ -115,6 +117,8 @@ export async function POST(request: NextRequest) {
                 scheduled_time,
                 chief_complaint,
                 symptoms: symptoms.length > 0 ? symptoms : null,
+                payment_id: payment_id || null,
+                payment_status,
             })
             .select()
             .single();

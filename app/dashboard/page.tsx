@@ -11,6 +11,7 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { TranslatedText } from '../components/TranslatedText';
 
 interface Appointment {
   aid: string;
@@ -77,6 +78,10 @@ export default function PatientDashboardPage() {
     setGreeting(selectedGreeting);
     
     fetchDashboardData();
+
+    // Poll for real-time updates
+    const interval = setInterval(fetchDashboardData, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   async function fetchDashboardData() {
@@ -150,9 +155,9 @@ export default function PatientDashboardPage() {
           </div>
           <div>
             <h1 className="text-3xl font-semibold text-gray-900">
-              {greeting}, {userName}! 👋
+              <TranslatedText as="span">{greeting}</TranslatedText>, <TranslatedText>{userName}</TranslatedText>! 👋
             </h1>
-            <p className="text-gray-600 mt-1">We hope you're feeling well today</p>
+            <TranslatedText as="p" className="text-gray-600 mt-1">We hope you're feeling well today</TranslatedText>
           </div>
         </div>
       </div>
@@ -168,14 +173,14 @@ export default function PatientDashboardPage() {
               {stats.upcomingAppointments}
             </span>
           </div>
-          <h3 className="text-sm font-medium text-gray-600 mb-1">
+          <TranslatedText as="h3" className="text-sm font-medium text-gray-600 mb-1">
             Upcoming Appointments
-          </h3>
+          </TranslatedText>
           <Link
             href="/dashboard/appointments"
             className="text-sm text-primary-600 hover:underline"
           >
-            View all →
+            <TranslatedText>View all →</TranslatedText>
           </Link>
         </div>
 
@@ -188,14 +193,14 @@ export default function PatientDashboardPage() {
               {stats.activePrescriptions}
             </span>
           </div>
-          <h3 className="text-sm font-medium text-gray-600 mb-1">
+          <TranslatedText as="h3" className="text-sm font-medium text-gray-600 mb-1">
             Active Prescriptions
-          </h3>
+          </TranslatedText>
           <Link
             href="/dashboard/prescriptions"
             className="text-sm text-secondary-600 hover:underline"
           >
-            Manage →
+            <TranslatedText>Manage →</TranslatedText>
           </Link>
         </div>
 
@@ -208,11 +213,15 @@ export default function PatientDashboardPage() {
               {stats.adherenceRate}%
             </span>
           </div>
-          <h3 className="text-sm font-medium text-gray-600 mb-1">
+          <TranslatedText as="h3" className="text-sm font-medium text-gray-600 mb-1">
             Medication Adherence
-          </h3>
+          </TranslatedText>
           <p className="text-sm text-accent-600">
-            {stats.adherenceRate >= 80 ? 'Excellent! Keep it up' : 'Keep improving!'}
+            {stats.adherenceRate >= 80 ? (
+              <TranslatedText>Excellent! Keep it up</TranslatedText>
+            ) : (
+              <TranslatedText>Keep improving!</TranslatedText>
+            )}
           </p>
         </div>
       </div>
@@ -223,9 +232,9 @@ export default function PatientDashboardPage() {
           {/* Medication Adherence Trend */}
           <div className="glass-card p-6 rounded-2xl">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-gray-900">
+              <TranslatedText as="h2" className="text-lg font-bold text-gray-900">
                 Weekly Medication Trend
-              </h2>
+              </TranslatedText>
               <img src="/Logos/logo_emblem_total black+transparent.png" alt="AuraSutra" className="h-5" />
             </div>
             <ResponsiveContainer width="100%" height={250}>
@@ -265,9 +274,9 @@ export default function PatientDashboardPage() {
           {medicineData.length > 0 && (
             <div className="glass-card p-6 rounded-2xl">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-bold text-gray-900">
+                <TranslatedText as="h2" className="text-lg font-bold text-gray-900">
                   Medicine-wise Progress
-                </h2>
+                </TranslatedText>
                 <Pill className="w-5 h-5 text-gray-400" />
               </div>
               <div className="flex items-center justify-center">
@@ -313,7 +322,7 @@ export default function PatientDashboardPage() {
 
       {/* Quick Actions */}
       <div className="glass-card p-6 rounded-2xl">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h2>
+        <TranslatedText as="h2" className="text-lg font-bold text-gray-900 mb-4">Quick Actions</TranslatedText>
         <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
           <Link
             href="/"
@@ -322,7 +331,7 @@ export default function PatientDashboardPage() {
             <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center group-hover:scale-110 smooth-transition">
               <img src="/Logos/logo_emblem_total black+transparent.png" alt="AuraSutra" className="h-5" />
             </div>
-            <span className="font-medium text-gray-900">AI Doctor Search</span>
+            <TranslatedText as="span" className="font-medium text-gray-900">AI Doctor Search</TranslatedText>
           </Link>
 
           <Link
@@ -332,7 +341,7 @@ export default function PatientDashboardPage() {
             <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center group-hover:scale-110 smooth-transition">
               <Calendar className="w-5 h-5 text-secondary-600" />
             </div>
-            <span className="font-medium text-gray-900">Find Doctors</span>
+            <TranslatedText as="span" className="font-medium text-gray-900">Find Doctors</TranslatedText>
           </Link>
 
           <Link
@@ -342,7 +351,7 @@ export default function PatientDashboardPage() {
             <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center group-hover:scale-110 smooth-transition">
               <FileText className="w-5 h-5 text-accent-600" />
             </div>
-            <span className="font-medium text-gray-900">View Prescriptions</span>
+            <TranslatedText as="span" className="font-medium text-gray-900">View Prescriptions</TranslatedText>
           </Link>
 
           <Link
@@ -352,7 +361,7 @@ export default function PatientDashboardPage() {
             <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center group-hover:scale-110 smooth-transition">
               <Pill className="w-5 h-5 text-emerald-600" />
             </div>
-            <span className="font-medium text-gray-900">Check Adherence</span>
+            <TranslatedText as="span" className="font-medium text-gray-900">Check Adherence</TranslatedText>
           </Link>
 
           <Link
@@ -362,7 +371,7 @@ export default function PatientDashboardPage() {
             <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center group-hover:scale-110 smooth-transition">
               <FileText className="w-5 h-5 text-rose-600" />
             </div>
-            <span className="font-medium text-gray-900">Update Profile</span>
+            <TranslatedText as="span" className="font-medium text-gray-900">Update Profile</TranslatedText>
           </Link>
         </div>
       </div>

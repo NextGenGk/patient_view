@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react';
 import { User, Save, Loader2, Camera } from 'lucide-react';
 import toast from 'react-hot-toast';
 
+import { TranslatedText } from '../../components/TranslatedText';
+import { useTranslation } from '../../hooks/useTranslation';
+
 export default function PatientProfilePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -30,6 +33,12 @@ export default function PatientProfilePage() {
   const [uid, setUid] = useState('');
   const [profileImage, setProfileImage] = useState('');
   const [uploading, setUploading] = useState(false);
+  
+  const { text: selectText } = useTranslation('Select');
+  const { text: maleText } = useTranslation('Male');
+  const { text: femaleText } = useTranslation('Female');
+  const { text: otherText } = useTranslation('Other');
+  const { text: preferNotToSayText } = useTranslation('Prefer not to say');
 
   useEffect(() => {
     fetchProfile();
@@ -191,8 +200,8 @@ export default function PatientProfilePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">My Profile</h1>
-        <p className="text-gray-600">Update your personal and medical information</p>
+        <TranslatedText as="h1" className="text-3xl font-bold text-gray-900 mb-2">My Profile</TranslatedText>
+        <TranslatedText as="p" className="text-gray-600">Update your personal and medical information</TranslatedText>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -221,7 +230,7 @@ export default function PatientProfilePage() {
             <div>
               <label className="cursor-pointer px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-xl font-semibold hover:shadow-lg smooth-transition inline-flex items-center space-x-2">
                 <Camera className="w-5 h-5" />
-                <span>Upload Photo</span>
+                <TranslatedText as="span">Upload Photo</TranslatedText>
                 <input
                   type="file"
                   accept="image/*"
@@ -230,7 +239,7 @@ export default function PatientProfilePage() {
                   disabled={uploading}
                 />
               </label>
-              <p className="text-sm text-gray-500 mt-2">JPG, PNG or GIF. Max 5MB.</p>
+              <TranslatedText as="p" className="text-sm text-gray-500 mt-2">JPG, PNG or GIF. Max 5MB.</TranslatedText>
             </div>
           </div>
         </div>
@@ -239,13 +248,13 @@ export default function PatientProfilePage() {
         <div className="glass-card p-6 rounded-2xl">
           <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
             <User className="w-5 h-5" />
-            <span>Personal Information</span>
+            <TranslatedText as="span">Personal Information</TranslatedText>
           </h2>
           
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Full Name *
+                <TranslatedText>Full Name</TranslatedText> *
               </label>
               <input
                 type="text"
@@ -258,7 +267,7 @@ export default function PatientProfilePage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Phone Number
+                <TranslatedText>Phone Number</TranslatedText>
               </label>
               <input
                 type="tel"
@@ -270,7 +279,7 @@ export default function PatientProfilePage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email (Read-only)
+                <TranslatedText>Email (Read-only)</TranslatedText>
               </label>
               <input
                 type="email"
@@ -282,7 +291,7 @@ export default function PatientProfilePage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Date of Birth
+                <TranslatedText>Date of Birth</TranslatedText>
               </label>
               <input
                 type="date"
@@ -294,31 +303,31 @@ export default function PatientProfilePage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Gender
+                <TranslatedText>Gender</TranslatedText>
               </label>
               <select
                 value={formData.gender}
                 onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500"
               >
-                <option value="">Select</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-                <option value="prefer_not_to_say">Prefer not to say</option>
+                <option value="">{selectText}</option>
+                <option value="male">{maleText}</option>
+                <option value="female">{femaleText}</option>
+                <option value="other">{otherText}</option>
+                <option value="prefer_not_to_say">{preferNotToSayText}</option>
               </select>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Blood Group
+                <TranslatedText>Blood Group</TranslatedText>
               </label>
               <select
                 value={formData.blood_group}
                 onChange={(e) => setFormData({ ...formData, blood_group: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500"
               >
-                <option value="">Select</option>
+                <option value="">{selectText}</option>
                 <option value="A+">A+</option>
                 <option value="A-">A-</option>
                 <option value="B+">B+</option>
@@ -334,12 +343,12 @@ export default function PatientProfilePage() {
 
         {/* Address */}
         <div className="glass-card p-6 rounded-2xl">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Address</h2>
+          <TranslatedText as="h2" className="text-xl font-bold text-gray-900 mb-4">Address</TranslatedText>
           
           <div className="grid gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Address Line 1
+                <TranslatedText>Address Line 1</TranslatedText>
               </label>
               <input
                 type="text"
@@ -351,7 +360,7 @@ export default function PatientProfilePage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Address Line 2
+                <TranslatedText>Address Line 2</TranslatedText>
               </label>
               <input
                 type="text"
@@ -364,7 +373,7 @@ export default function PatientProfilePage() {
             <div className="grid md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  City
+                  <TranslatedText>City</TranslatedText>
                 </label>
                 <input
                   type="text"
@@ -376,7 +385,7 @@ export default function PatientProfilePage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  State
+                  <TranslatedText>State</TranslatedText> / Province
                 </label>
                 <input
                   type="text"
@@ -388,7 +397,7 @@ export default function PatientProfilePage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Postal Code
+                  <TranslatedText>Postal Code</TranslatedText>
                 </label>
                 <input
                   type="text"
@@ -403,12 +412,12 @@ export default function PatientProfilePage() {
 
         {/* Emergency Contact */}
         <div className="glass-card p-6 rounded-2xl">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Emergency Contact</h2>
+          <TranslatedText as="h2" className="text-xl font-bold text-gray-900 mb-4">Emergency Contact</TranslatedText>
           
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Contact Name
+                <TranslatedText>Contact Name</TranslatedText>
               </label>
               <input
                 type="text"
@@ -420,7 +429,7 @@ export default function PatientProfilePage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Contact Phone
+                <TranslatedText>Contact Phone</TranslatedText>
               </label>
               <input
                 type="tel"
@@ -442,12 +451,12 @@ export default function PatientProfilePage() {
             {saving ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-                <span>Saving...</span>
+                <TranslatedText as="span">Saving...</TranslatedText>
               </>
             ) : (
               <>
                 <Save className="w-5 h-5" />
-                <span>Save Changes</span>
+                <TranslatedText as="span">Save Changes</TranslatedText>
               </>
             )}
           </button>

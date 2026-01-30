@@ -5,6 +5,8 @@ import { useSearchParams } from 'next/navigation';
 import { Calendar, Video, MapPin, Clock, User, XCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
+import { TranslatedText } from '../../components/TranslatedText';
+
 interface Appointment {
   aid: string;
   scheduled_date: string;
@@ -35,6 +37,8 @@ export default function AppointmentsPage() {
 
   useEffect(() => {
     fetchAppointments();
+    const interval = setInterval(fetchAppointments, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   async function fetchAppointments() {
@@ -116,8 +120,8 @@ export default function AppointmentsPage() {
     <div className="space-y-6">
       {/* Compact Header */}
       <div className="mb-4">
-        <h1 className="text-3xl font-black text-gray-900 mb-1">My Appointments</h1>
-        <p className="text-gray-600 text-sm">Track and manage your healthcare consultations</p>
+        <TranslatedText as="h1" className="text-3xl font-black text-gray-900 mb-1">My Appointments</TranslatedText>
+        <TranslatedText as="p" className="text-gray-600 text-sm">Track and manage your healthcare consultations</TranslatedText>
       </div>
 
       {/* Tabs */}
@@ -132,7 +136,7 @@ export default function AppointmentsPage() {
                 : 'text-gray-600 hover:bg-gray-50'
             }`}
           >
-            {tab.label}
+            <TranslatedText>{tab.label}</TranslatedText>
           </button>
         ))}
       </div>
@@ -142,11 +146,13 @@ export default function AppointmentsPage() {
         <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
           <Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <p className="text-gray-600 font-medium">
-            {activeTab === 'upcoming'
-              ? 'No upcoming appointments'
-              : activeTab === 'completed'
-              ? 'No completed appointments'
-              : 'No cancelled appointments'}
+            <TranslatedText>
+              {activeTab === 'upcoming'
+                ? 'No upcoming appointments'
+                : activeTab === 'completed'
+                ? 'No completed appointments'
+                : 'No cancelled appointments'}
+            </TranslatedText>
           </p>
         </div>
       ) : (
@@ -175,7 +181,7 @@ export default function AppointmentsPage() {
               {/* Bottom Info (Always Visible) */}
               <div className="absolute bottom-0 left-0 right-0 p-8 text-white z-10 translate-y-2 group-hover:translate-y-full transition-transform duration-300">
                 <h3 className="text-3xl font-black mb-3 drop-shadow-md truncate">
-                  Dr. {apt.doctor?.user?.name || 'Doctor'}
+                  <TranslatedText>Dr.</TranslatedText> <TranslatedText>{apt.doctor?.user?.name || 'Doctor'}</TranslatedText>
                 </h3>
                 
                 <div className="flex items-center space-x-3 text-sm mb-3">
@@ -197,13 +203,13 @@ export default function AppointmentsPage() {
                     apt.status === 'in_progress' ? 'bg-purple-500/40 text-purple-50 border-purple-300/60 animate-pulse' :
                     'bg-amber-500/40 text-amber-50 border-amber-300/60'
                   }`}>
-                    {apt.status.toUpperCase()}
+                    <TranslatedText className="uppercase">{apt.status}</TranslatedText>
                   </span>
                   <span className={`px-3 py-1.5 rounded-full text-xs font-bold backdrop-blur-md flex items-center space-x-1 ${
                     apt.mode === 'online' ? 'bg-blue-500/40 text-blue-50 border border-blue-300/60' : 'bg-emerald-500/40 text-emerald-50 border border-emerald-300/60'
                   }`}>
                     {apt.mode === 'online' ? <Video className="w-3 h-3" /> : <MapPin className="w-3 h-3" />}
-                    <span className="capitalize">{apt.mode}</span>
+                    <TranslatedText as="span" className="capitalize">{apt.mode}</TranslatedText>
                   </span>
                 </div>
               </div>
@@ -222,13 +228,13 @@ export default function AppointmentsPage() {
                   )}
                 </div>
                 
-                <h3 className="text-white font-black text-xl mb-4">Dr. {apt.doctor?.user?.name}</h3>
+                <h3 className="text-white font-black text-xl mb-4"><TranslatedText>Dr.</TranslatedText> <TranslatedText>{apt.doctor?.user?.name}</TranslatedText></h3>
 
                 {/* Chief Complaint */}
                 {apt.complaint_description && (
                   <div className="bg-white/10 rounded-xl p-4 border border-white/20 mb-4 w-full">
-                    <p className="text-xs font-bold text-primary-200 mb-2">Chief Complaint</p>
-                    <p className="text-sm text-white leading-relaxed">{apt.complaint_description}</p>
+                    <p className="text-xs font-bold text-primary-200 mb-2"><TranslatedText>Chief Complaint</TranslatedText></p>
+                    <p className="text-sm text-white leading-relaxed"><TranslatedText>{apt.complaint_description}</TranslatedText></p>
                   </div>
                 )}
 
@@ -236,12 +242,12 @@ export default function AppointmentsPage() {
                 <div className={`grid ${apt.status === 'completed' && apt.mode === 'online' && apt.start_time && apt.end_time ? 'grid-cols-2' : 'grid-cols-2'} gap-3 py-4 border-y border-white/10 w-full mb-4`}>
                   <div className="text-center">
                     <Calendar className="w-4 h-4 text-emerald-400 mx-auto mb-1" />
-                    <p className="text-xs font-bold text-gray-400 mb-1">Date</p>
+                    <p className="text-xs font-bold text-gray-400 mb-1"><TranslatedText>Date</TranslatedText></p>
                     <p className="text-xs font-bold text-white">{new Date(apt.scheduled_date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</p>
                   </div>
                   <div className="text-center">
                     <Clock className="w-4 h-4 text-blue-400 mx-auto mb-1" />
-                    <p className="text-xs font-bold text-gray-400 mb-1">Time</p>
+                    <p className="text-xs font-bold text-gray-400 mb-1"><TranslatedText>Time</TranslatedText></p>
                     <p className="text-xs font-bold text-white">{apt.scheduled_time}</p>
                   </div>
                 </div>
@@ -249,7 +255,7 @@ export default function AppointmentsPage() {
                 {/* Meeting Duration for Completed Online Appointments */}
                 {apt.status === 'completed' && apt.mode === 'online' && apt.start_time && apt.end_time && (
                   <div className="bg-blue-500/20 rounded-xl p-3 border border-blue-300/30 mb-4 w-full">
-                    <p className="text-xs font-bold text-blue-200 mb-2">Meeting Duration</p>
+                    <p className="text-xs font-bold text-blue-200 mb-2"><TranslatedText>Meeting Duration</TranslatedText></p>
                     <div className="flex items-center justify-center space-x-3 text-sm text-white">
                       <span className="font-medium">{apt.start_time}</span>
                       <span className="text-gray-400">→</span>
@@ -265,7 +271,7 @@ export default function AppointmentsPage() {
                       onClick={(e) => { e.stopPropagation(); window.location.href = `/dashboard/video-call/${apt.aid}`; }}
                       className="w-full py-3 bg-gradient-to-r from-primary-600 to-emerald-600 text-white rounded-2xl font-bold text-sm hover:scale-105 transition-all"
                     >
-                      {apt.status === 'in_progress' ? '🔴 Join Call Now' : 'Join Call'}
+                      <TranslatedText>{apt.status === 'in_progress' ? 'Join Call Now' : 'Join Call'}</TranslatedText>
                     </button>
                   )}
                   
@@ -273,7 +279,7 @@ export default function AppointmentsPage() {
                     onClick={(e) => { e.stopPropagation(); setSelectedAppointment(apt); }}
                     className="w-full py-3 bg-white/20 border border-white/30 text-white rounded-2xl font-bold text-sm hover:bg-white/30 transition-all"
                   >
-                    View Full Details
+                    <TranslatedText>View Full Details</TranslatedText>
                   </button>
                   
                   {activeTab === 'upcoming' && (
@@ -281,7 +287,7 @@ export default function AppointmentsPage() {
                       onClick={(e) => { e.stopPropagation(); cancelAppointment(apt.aid); }}
                       className="w-full py-3 bg-red-500/30 border border-red-300/50 text-red-100 rounded-2xl font-bold text-sm hover:bg-red-500/50 transition-all"
                     >
-                      Cancel Appointment
+                      <TranslatedText>Cancel Appointment</TranslatedText>
                     </button>
                   )}
                 </div>
@@ -297,7 +303,7 @@ export default function AppointmentsPage() {
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="sticky top-0 bg-gradient-to-r from-primary-600 to-emerald-600 text-white p-6 rounded-t-2xl">
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-black">Appointment Details</h2>
+                <TranslatedText as="h2" className="text-2xl font-black">Appointment Details</TranslatedText>
                 <button
                   onClick={() => setSelectedAppointment(null)}
                   className="p-2 hover:bg-white/20 rounded-lg transition-colors"
@@ -331,28 +337,28 @@ export default function AppointmentsPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-gray-50 p-4 rounded-xl">
-                  <p className="text-xs font-bold text-gray-500 mb-1">Date</p>
+                  <p className="text-xs font-bold text-gray-500 mb-1"><TranslatedText>Date</TranslatedText></p>
                   <p className="text-lg font-black text-gray-900">
                     {new Date(selectedAppointment.scheduled_date).toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
                   </p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-xl">
-                  <p className="text-xs font-bold text-gray-500 mb-1">Time</p>
+                  <p className="text-xs font-bold text-gray-500 mb-1"><TranslatedText>Time</TranslatedText></p>
                   <p className="text-lg font-black text-gray-900">{selectedAppointment.scheduled_time}</p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-xl">
-                  <p className="text-xs font-bold text-gray-500 mb-1">Mode</p>
+                  <p className="text-xs font-bold text-gray-500 mb-1"><TranslatedText>Mode</TranslatedText></p>
                   <p className="text-lg font-black text-gray-900 capitalize">{selectedAppointment.mode}</p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-xl">
-                  <p className="text-xs font-bold text-gray-500 mb-1">Status</p>
+                  <p className="text-xs font-bold text-gray-500 mb-1"><TranslatedText>Status</TranslatedText></p>
                   <p className="text-lg font-black text-gray-900 capitalize">{selectedAppointment.status}</p>
                 </div>
               </div>
 
               {selectedAppointment.complaint_description && (
                 <div className="bg-primary-50 p-4 rounded-xl border border-primary-100">
-                  <p className="text-xs font-bold text-primary-700 mb-2">Your Note</p>
+                  <p className="text-xs font-bold text-primary-700 mb-2"><TranslatedText>Your Note</TranslatedText></p>
                   <p className="text-gray-700">{selectedAppointment.complaint_description}</p>
                 </div>
               )}

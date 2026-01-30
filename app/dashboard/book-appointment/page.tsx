@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Calendar, Clock, Video, MapPin, User, Award, Loader2, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { TranslatedText } from '../../components/TranslatedText';
 
 interface Doctor {
   did: string;
@@ -75,42 +76,159 @@ export default function BookAppointmentPage() {
       return;
     }
 
+    if (!doctor) {
+      toast.error('Doctor information not available');
+      return;
+    }
+
     setSubmitting(true);
 
     try {
-      const symptomsArray = symptoms
-        .split(',')
-        .map((s) => s.trim())
-        .filter((s) => s.length > 0);
-
-      const response = await fetch('/api/appointments/create', {
+      // Step 1: Create Razorpay order
+      const orderResponse = await fetch('/api/payments/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          did,
-          scheduled_date: selectedDate,
-          scheduled_time: selectedTime,
-          mode,
-          chief_complaint: chiefComplaint,
-          symptoms: symptomsArray,
+          amount: doctor.consultation_fee,
+          currency: 'INR',
+          receipt: `appointment_${Date.now()}`,
+          notes: {
+            doctor_id: did,
+            scheduled_date: selectedDate,
+            scheduled_time: selectedTime,
+          },
         }),
       });
 
-      const data = await response.json();
+      const orderData = await orderResponse.json();
 
-      if (data.success) {
-        setShowSuccess(true);
-        toast.success('Appointment booked successfully!');
-        setTimeout(() => {
-          router.push('/dashboard/appointments');
-        }, 2000);
-      } else {
-        toast.error(data.error || 'Failed to book appointment');
+      if (!orderData.success) {
+        toast.error('Failed to create payment order');
+        setSubmitting(false);
+        return;
       }
+
+      // Step 2: Initialize Razorpay checkout
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: orderData.order.amount,
+        currency: orderData.order.currency,
+        name: 'AuraSutra',
+        description: `Consultation with Dr. ${doctor.user.name}`,
+        order_id: orderData.order.id,
+        handler: async function (response: any) {
+          try {
+            // Step 3: Verify payment
+            const verifyResponse = await fetch('/api/payments/verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+            });
+
+            const verifyData = await verifyResponse.json();
+
+            if (verifyData.success) {
+              // Step 4: Record transaction in finance_transactions table
+              const symptomsArray = symptoms
+                .split(',')
+                .map((s) => s.trim())
+                .filter((s) => s.length > 0);
+
+              const appointmentResponse = await fetch('/api/appointments/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  did,
+                  scheduled_date: selectedDate,
+                  scheduled_time: selectedTime,
+                  mode,
+                  chief_complaint: chiefComplaint,
+                  symptoms: symptomsArray,
+                  payment_id: response.razorpay_payment_id,
+                  payment_status: 'completed',
+                }),
+              });
+
+              const appointmentData = await appointmentResponse.json();
+
+              if (appointmentData.success) {
+                // Step 5: Record transaction after appointment is created
+                const transactionResponse = await fetch('/api/payments/record-transaction', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    aid: appointmentData.appointment.aid,
+                    did,
+                    amount: doctor.consultation_fee,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_signature: response.razorpay_signature,
+                    payment_method: 'card', // You can enhance this to detect actual method
+                    razorpay_response: response,
+                    status: 'paid',
+                  }),
+                });
+
+                const transactionData = await transactionResponse.json();
+                
+                if (transactionData.success) {
+                  console.log('Transaction recorded:', transactionData.transaction);
+                }
+
+                setShowSuccess(true);
+                toast.success('Payment successful! Appointment booked.');
+                setTimeout(() => {
+                  router.push('/dashboard/appointments');
+                }, 2000);
+              } else {
+                toast.error(appointmentData.error || 'Failed to book appointment');
+              }
+            } else {
+              toast.error('Payment verification failed');
+            }
+          } catch (error) {
+            console.error('Error after payment:', error);
+            toast.error('Failed to process appointment');
+          } finally {
+            setSubmitting(false);
+          }
+        },
+        prefill: {
+          name: doctor.user.name,
+          email: doctor.user.email,
+          contact: doctor.user.phone,
+        },
+        theme: {
+          color: '#10b981',
+        },
+        modal: {
+          ondismiss: function () {
+            setSubmitting(false);
+            toast.error('Payment cancelled');
+          },
+        },
+      };
+
+      // Load Razorpay script and open checkout
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.async = true;
+      script.onload = () => {
+        const razorpay = new (window as any).Razorpay(options);
+        razorpay.open();
+      };
+      script.onerror = () => {
+        toast.error('Failed to load payment gateway');
+        setSubmitting(false);
+      };
+      document.body.appendChild(script);
     } catch (error) {
-      console.error('Error booking appointment:', error);
-      toast.error('Failed to book appointment');
-    } finally {
+      console.error('Error initiating payment:', error);
+      toast.error('Failed to initiate payment');
       setSubmitting(false);
     }
   }
@@ -185,10 +303,10 @@ export default function BookAppointmentPage() {
           )}
 
           <div className="flex-1">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">{doctor.user.name}</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2"><TranslatedText>Dr.</TranslatedText> <TranslatedText>{doctor.user.name}</TranslatedText></h2>
             <div className="flex items-center space-x-2 text-gray-600 mb-2">
               <Award className="w-4 h-4" />
-              <span className="font-medium">{doctor.qualification}</span>
+              <span className="font-medium"><TranslatedText>{doctor.qualification}</TranslatedText></span>
             </div>
             <div className="flex flex-wrap gap-2 mb-3">
               {doctor.specialization?.slice(0, 3).map((spec, idx) => (
@@ -196,13 +314,13 @@ export default function BookAppointmentPage() {
                   key={idx}
                   className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium"
                 >
-                  {spec}
+                  <TranslatedText>{spec}</TranslatedText>
                 </span>
               ))}
             </div>
             <div className="flex items-center space-x-4 text-sm text-gray-600">
-              <span>📍 {doctor.city}, {doctor.state}</span>
-              <span>💼 {doctor.years_of_experience} years exp</span>
+              <span>📍 <TranslatedText>{doctor.city}</TranslatedText>, <TranslatedText>{doctor.state}</TranslatedText></span>
+              <span>💼 {doctor.years_of_experience} <TranslatedText>years exp</TranslatedText></span>
               <span className="text-xl font-bold text-primary-600">₹{doctor.consultation_fee}</span>
             </div>
           </div>
@@ -211,7 +329,7 @@ export default function BookAppointmentPage() {
 
       {/* Booking Form */}
       <form onSubmit={handleSubmit} className="glass-card p-6 rounded-2xl space-y-6">
-        <h3 className="text-xl font-bold text-gray-900">Appointment Details</h3>
+        <h3 className="text-xl font-bold text-gray-900"><TranslatedText>Appointment Details</TranslatedText></h3>
 
         {/* Mode Selection */}
         <div>
@@ -254,7 +372,7 @@ export default function BookAppointmentPage() {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             <Calendar className="w-4 h-4 inline mr-1" />
-            Appointment Date
+            <TranslatedText>Appointment Date</TranslatedText>
           </label>
           <input
             type="date"
@@ -271,7 +389,7 @@ export default function BookAppointmentPage() {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             <Clock className="w-4 h-4 inline mr-1" />
-            Appointment Time
+            <TranslatedText>Appointment Time</TranslatedText>
           </label>
           
           {/* Custom Time Input for Testing */}
@@ -333,6 +451,30 @@ export default function BookAppointmentPage() {
           />
         </div>
 
+        {/* Payment Summary */}
+        <div className="bg-gradient-to-br from-primary-50 to-secondary-50 p-6 rounded-xl border-2 border-primary-200">
+          <h4 className="text-lg font-semibold text-gray-900 mb-4">💰 Payment Summary</h4>
+          <div className="space-y-2">
+            <div className="flex justify-between text-gray-700">
+              <span>Consultation Fee</span>
+              <span className="font-semibold">₹{doctor.consultation_fee}</span>
+            </div>
+            <div className="flex justify-between text-gray-700">
+              <span>Platform Fee</span>
+              <span className="font-semibold">₹0</span>
+            </div>
+            <div className="border-t-2 border-primary-200 pt-2 mt-2">
+              <div className="flex justify-between text-lg font-bold text-primary-600">
+                <span>Total Amount</span>
+                <span>₹{doctor.consultation_fee}</span>
+              </div>
+            </div>
+          </div>
+          <p className="text-xs text-gray-600 mt-3">
+            🔒 Secure payment powered by Razorpay
+          </p>
+        </div>
+
         {/* Submit Button */}
         <button
           type="submit"
@@ -342,10 +484,13 @@ export default function BookAppointmentPage() {
           {submitting ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
-              <span>Booking Appointment...</span>
+              <span>Processing Payment...</span>
             </>
           ) : (
-            <span>📅 Book Appointment</span>
+            <>
+              <span>💳 Proceed to Payment</span>
+              <span className="ml-2 font-bold">₹{doctor.consultation_fee}</span>
+            </>
           )}
         </button>
       </form>

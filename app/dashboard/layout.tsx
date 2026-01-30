@@ -4,7 +4,12 @@ import { Home, Calendar, User, FileText, LogOut, Pill } from 'lucide-react';
 import Link from 'next/link';
 import PatientProfilePicture from '../components/ProfilePicture';
 import LiveCallNotifier from './components/LiveCallNotifier';
+<<<<<<< HEAD
 import { supabase } from '@/lib/shared/supabase';
+=======
+import { LanguageSwitcher } from '../components/LanguageSwitcher';
+import { TranslatedText } from '../components/TranslatedText';
+>>>>>>> e13a04d (add: razorpay payment integration, multilingual | add clinic --patient)
 
 export default async function DashboardLayout({
   children,
@@ -60,9 +65,16 @@ export default async function DashboardLayout({
               className="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50/50 smooth-transition text-gray-700 hover:text-primary-600 group"
             >
               <item.icon className="w-5 h-5 group-hover:scale-110 smooth-transition" />
-              <span className="font-medium">{item.name}</span>
+              <span className="font-medium">
+                <TranslatedText>{item.name}</TranslatedText>
+              </span>
             </Link>
           ))}
+          
+          {/* Language Switcher */}
+          <div className="pt-4 mt-4 border-t border-gray-200/50">
+            <LanguageSwitcher />
+          </div>
         </nav>
 
         <div className="p-4 border-t border-gray-200/50">
@@ -77,7 +89,7 @@ export default async function DashboardLayout({
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-gray-900 truncate">
-                {user?.given_name || 'User'}
+                <TranslatedText>{user?.given_name || 'User'}</TranslatedText>
               </p>
               <p className="text-xs text-gray-500 truncate">{user?.email}</p>
             </div>
@@ -87,7 +99,9 @@ export default async function DashboardLayout({
             className="flex items-center space-x-2 px-4 py-2 mt-2 text-red-600 hover:bg-red-50 rounded-lg smooth-transition"
           >
             <LogOut className="w-4 h-4" />
-            <span className="text-sm font-medium">Logout</span>
+            <span className="text-sm font-medium">
+              <TranslatedText>Logout</TranslatedText>
+            </span>
           </Link>
         </div>
       </aside>

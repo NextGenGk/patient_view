@@ -6,6 +6,8 @@ import { LoginLink, useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useVoiceToText } from './hooks/useVoiceToText';
+import { LanguageSwitcher } from './components/LanguageSwitcher';
+import { TranslatedText } from './components/TranslatedText';
 
 interface DoctorRecommendation {
   name: string;
@@ -117,29 +119,36 @@ export default function HomePage() {
               <span className="text-2xl font-semibold" style={{ fontFamily: 'Alatsi, sans-serif' }}>AuraSutra</span>
             </div>
             
-            {isAuthenticated ? (
-              <Link 
-                href="/dashboard"
-                className="flex items-center space-x-3 px-4 py-2 rounded-full hover:bg-gray-100 smooth-transition"
-              >
-                {profileImage ? (
-                  <img 
-                    src={profileImage} 
-                    alt="Profile" 
-                    className="w-10 h-10 rounded-full object-cover border-2 border-primary-200"
-                  />
-                ) : (
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-100 to-secondary-100 flex items-center justify-center">
-                    <User className="w-5 h-5 text-primary-600" />
-                  </div>
-                )}
-                <span className="font-semibold text-gray-900">Dashboard</span>
-              </Link>
-            ) : (
-              <LoginLink className="px-6 py-2.5 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-full font-semibold hover:shadow-lg smooth-transition">
-                Sign In
-              </LoginLink>
-            )}
+            <div className="flex items-center gap-4">
+              {/* Language Switcher */}
+              <LanguageSwitcher />
+              
+              {isAuthenticated ? (
+                <Link 
+                  href="/dashboard"
+                  className="flex items-center space-x-3 px-4 py-2 rounded-full hover:bg-gray-100 smooth-transition"
+                >
+                  {profileImage ? (
+                    <img 
+                      src={profileImage} 
+                      alt="Profile" 
+                      className="w-10 h-10 rounded-full object-cover border-2 border-primary-200"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-100 to-secondary-100 flex items-center justify-center">
+                      <User className="w-5 h-5 text-primary-600" />
+                    </div>
+                  )}
+                  <TranslatedText as="span" className="font-semibold text-gray-900">
+                    Dashboard
+                  </TranslatedText>
+                </Link>
+              ) : (
+                <LoginLink className="px-6 py-2.5 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-full font-semibold hover:shadow-lg smooth-transition">
+                  <TranslatedText as="span">Sign In</TranslatedText>
+                </LoginLink>
+              )}
+            </div>
           </div>
         </div>
       </nav>
@@ -150,17 +159,24 @@ export default function HomePage() {
           <div className="text-center mb-8">
             <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-primary-50 to-purple-50 text-primary-700 px-4 py-2 rounded-full mb-6 animate-fade-in border border-primary-100">
               <Sparkles className="w-4 h-4" />
-              <span className="text-sm font-semibold">AI-Powered Doctor Discovery</span>
+              <TranslatedText as="span" className="text-sm font-semibold">
+                AI-Powered Doctor Discovery
+              </TranslatedText>
             </div>
             
             <h1 className="text-5xl md:text-6xl font-black mb-4 animate-fade-in">
-              Find Your Suitable{' '}
-              <span className="gradient-text">Expert Doctor</span>
+              <TranslatedText as="span">Find Your Suitable</TranslatedText>{' '}
+              <span className="gradient-text">
+                <TranslatedText as="span">Expert Doctor</TranslatedText>
+              </span>
             </h1>
             
-            <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto animate-fade-in">
+            <TranslatedText 
+              as="p" 
+              className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto animate-fade-in"
+            >
               Describe your symptoms and let AI recommend the best verified practitioners
-            </p>
+            </TranslatedText>
           </div>
 
           {/* Compact AI Search Box */}
@@ -339,8 +355,12 @@ export default function HomePage() {
                   <div className="inline-flex p-4 rounded-xl bg-gradient-to-br from-primary-50 to-secondary-50 mb-4">
                     {feature.icon}
                   </div>
-                  <h3 className="font-black text-gray-900 mb-2">{feature.title}</h3>
-                  <p className="text-sm text-gray-600">{feature.description}</p>
+                  <TranslatedText as="h3" className="font-black text-gray-900 mb-2">
+                    {feature.title}
+                  </TranslatedText>
+                  <TranslatedText as="p" className="text-sm text-gray-600">
+                    {feature.description}
+                  </TranslatedText>
                 </div>
               ))}
             </div>

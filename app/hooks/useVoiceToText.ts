@@ -71,7 +71,10 @@ export function useVoiceToText() {
                 }
             }
 
-            setTranscript((prev) => prev + finalTranscript + interimTranscript);
+            // Only append final transcripts to avoid duplication
+            if (finalTranscript) {
+                setTranscript((prev) => prev + finalTranscript);
+            }
         };
 
         recognition.onerror = (event: SpeechRecognitionErrorEvent) => {

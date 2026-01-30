@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { CheckCircle2, Clock } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { TranslatedText } from './TranslatedText';
 
 interface AdherenceCheckboxProps {
   adherenceId: string;
@@ -112,7 +113,7 @@ export default function AdherenceCheckbox({
           isTaken ? 'text-green-900 line-through' : 
           overdueStatus ? 'text-red-900' : 'text-gray-900'
         }`}>
-          {medicineName}
+          <TranslatedText>{medicineName}</TranslatedText>
         </p>
         
         {showTime && (
@@ -125,7 +126,7 @@ export default function AdherenceCheckbox({
               overdueStatus ? 'text-red-600 font-semibold' : 'text-gray-600'
             }`}>
               {formatTime(scheduledTime)}
-              {overdueStatus && <span className="ml-1">• OVERDUE</span>}
+              {overdueStatus && <span className="ml-1">• <TranslatedText>OVERDUE</TranslatedText></span>}
             </span>
           </div>
         )}
