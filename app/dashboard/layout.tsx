@@ -4,12 +4,9 @@ import { Home, Calendar, User, FileText, LogOut, Pill } from 'lucide-react';
 import Link from 'next/link';
 import PatientProfilePicture from '../components/ProfilePicture';
 import LiveCallNotifier from './components/LiveCallNotifier';
-<<<<<<< HEAD
 import { supabase } from '@/lib/shared/supabase';
-=======
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { TranslatedText } from '../components/TranslatedText';
->>>>>>> e13a04d (add: razorpay payment integration, multilingual | add clinic --patient)
 
 export default async function DashboardLayout({
   children,
