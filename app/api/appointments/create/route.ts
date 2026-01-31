@@ -161,6 +161,13 @@ export async function POST(request: NextRequest) {
                 })
             });
 
+            if (!notificationResponse.ok) {
+                const errorText = await notificationResponse.text();
+                console.error('❌ Notification API returned error:', notificationResponse.status);
+                console.error('Error response:', errorText);
+                throw new Error(`Notification API failed with status ${notificationResponse.status}`);
+            }
+
             const notificationResult = await notificationResponse.json();
             console.log('📧 Notification API response:', notificationResult);
 

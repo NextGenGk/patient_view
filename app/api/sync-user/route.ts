@@ -29,13 +29,23 @@ export async function GET() {
             .single();
 
         if (existingUser) {
-            // Update last_login
+            // Update role to 'patient' since they're logging in through patient_view
             await supabase
                 .from('users')
-                .update({ last_login: new Date().toISOString() })
+                .update({
+                    last_login: new Date().toISOString(),
+                    role: 'patient' // Always set to patient when logging in through patient_view
+                })
                 .eq('uid', existingUser.uid);
 
-            return NextResponse.json({ user: existingUser });
+            // Fetch updated user data
+            const { data: updatedUser } = await supabase
+                .from('users')
+                .select('*')
+                .eq('uid', existingUser.uid)
+                .single();
+
+            return NextResponse.json({ user: updatedUser || existingUser });
         }
 
         // Create new user in Supabase

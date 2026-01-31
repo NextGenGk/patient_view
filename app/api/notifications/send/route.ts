@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
                 .from('patients')
                 .select(`
                     *,
-                    user:uid (
+                    user:users!uid (
                         uid,
                         name,
                         email,
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
                 .from('doctors')
                 .select(`
                     *,
-                    user:uid (
+                    user:users!uid (
                         uid,
                         name,
                         email,
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
 
             const patientEmailResult = await sendEmail({
                 to: patient.user.email,
-                subject: '✅ Appointment Confirmed - AuraSutra',
+                subject: 'Appointment Confirmed - AuraSutra',
                 html: patientEmailHtml,
             });
 
@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
 
             const doctorEmailResult = await sendEmail({
                 to: doctor.user.email,
-                subject: '📅 New Appointment Scheduled - AuraSutra',
+                subject: 'New Appointment Scheduled - AuraSutra',
                 html: doctorEmailHtml,
             });
 
@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
                 .from('patients')
                 .select(`
                     *,
-                    user:uid (
+                    user:users!uid (
                         uid,
                         name,
                         email,
@@ -155,7 +155,7 @@ export async function POST(request: NextRequest) {
                 .from('doctors')
                 .select(`
                     *,
-                    user:uid (
+                    user:users!uid (
                         uid,
                         name,
                         email,
@@ -188,7 +188,7 @@ export async function POST(request: NextRequest) {
 
             const patientEmailResult = await sendEmail({
                 to: patient.user.email,
-                subject: `💊 New Prescription from Dr. ${doctor.user.name} - AuraSutra`,
+                subject: `New Prescription from Dr. ${doctor.user.name} - AuraSutra`,
                 html: patientEmailHtml,
             });
 
@@ -208,7 +208,7 @@ export async function POST(request: NextRequest) {
 
             const doctorEmailResult = await sendEmail({
                 to: doctor.user.email,
-                subject: `📋 Prescription Created for ${patient.user.name} - AuraSutra`,
+                subject: `Prescription Created for ${patient.user.name} - AuraSutra`,
                 html: doctorEmailHtml,
             });
 

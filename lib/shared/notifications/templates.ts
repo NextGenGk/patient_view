@@ -70,9 +70,10 @@ export function generateAppointmentCreatedEmail(data: AppointmentEmailData): str
           box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         .header { 
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, #f0fdf4 0%, #d1fae5 50%, #ccfbf1 100%);
           padding: 40px 30px;
           text-align: center;
+          border-bottom: 3px solid #10B981;
         }
         .logo {
           font-size: 32px;
@@ -82,9 +83,10 @@ export function generateAppointmentCreatedEmail(data: AppointmentEmailData): str
           letter-spacing: 1px;
         }
         .header-subtitle {
-          color: rgba(255,255,255,0.9);
+          color: #111827;
           font-size: 14px;
-          margin: 0;
+          margin: 10px 0 0 0;
+          font-weight: 500;
         }
         .content { 
           padding: 40px 30px;
@@ -99,7 +101,7 @@ export function generateAppointmentCreatedEmail(data: AppointmentEmailData): str
           padding: 25px;
           margin: 25px 0;
           border-radius: 6px;
-          border-left: 4px solid #667eea;
+          border-left: 4px solid #10b981;
         }
         .detail-row { 
           margin: 12px 0;
@@ -117,7 +119,7 @@ export function generateAppointmentCreatedEmail(data: AppointmentEmailData): str
         .button { 
           display: inline-block;
           padding: 14px 32px;
-          background: #667eea;
+          background: #10b981;
           color: white !important;
           text-decoration: none;
           border-radius: 6px;
@@ -126,20 +128,20 @@ export function generateAppointmentCreatedEmail(data: AppointmentEmailData): str
           transition: background 0.3s;
         }
         .button:hover {
-          background: #5568d3;
+          background: #059669;
         }
         .button-container {
           text-align: center;
           margin: 30px 0;
         }
         .note {
-          background: #e8f4f8;
+          background: #f0fdf4;
           padding: 15px;
           border-radius: 6px;
-          border-left: 4px solid #0ea5e9;
+          border-left: 4px solid #10B981;
           margin: 20px 0;
           font-size: 14px;
-          color: #0c4a6e;
+          color: #111827;
         }
         .signature {
           margin-top: 40px;
@@ -153,7 +155,7 @@ export function generateAppointmentCreatedEmail(data: AppointmentEmailData): str
         }
         .ceo-name {
           font-weight: 600;
-          color: #667eea;
+          color: #10b981;
         }
         .footer { 
           background: #f8f9fa;
@@ -170,7 +172,7 @@ export function generateAppointmentCreatedEmail(data: AppointmentEmailData): str
     <body>
       <div class="container">
         <div class="header">
-          <div class="logo">🌿 AuraSutra</div>
+          <img src="https://rsnysvtjmelnojkubdqu.supabase.co/storage/v1/object/public/logos/logo+name_transparent.png" alt="AuraSutra" style="height: 60px; margin-bottom: 10px;" />
           <p class="header-subtitle">Holistic Healthcare Platform</p>
         </div>
         
@@ -227,8 +229,8 @@ export function generateAppointmentCreatedEmail(data: AppointmentEmailData): str
           
           <div class="note">
             ${recipientType === 'patient'
-      ? '📌 Please arrive 10 minutes early for in-person appointments. For online consultations, ensure you have a stable internet connection.'
-      : '📌 Please review the patient\'s medical history and chief complaint before the appointment.'}
+      ? 'Please arrive 10 minutes early for in-person appointments. For online consultations, ensure you have a stable internet connection.'
+      : 'Please review the patient\'s medical history and chief complaint before the appointment.'}
           </div>
           
           <p style="font-size: 14px; color: #6b7280;">If you need to reschedule or cancel, please do so at least 24 hours in advance.</p>
@@ -288,9 +290,10 @@ export function generatePrescriptionCreatedEmail(data: PrescriptionEmailData): s
           box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         .header { 
-          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+          background: linear-gradient(135deg, #f0fdf4 0%, #d1fae5 50%, #ccfbf1 100%);
           padding: 40px 30px;
           text-align: center;
+          border-bottom: 3px solid #10B981;
         }
         .logo {
           font-size: 32px;
@@ -300,9 +303,10 @@ export function generatePrescriptionCreatedEmail(data: PrescriptionEmailData): s
           letter-spacing: 1px;
         }
         .header-subtitle {
-          color: rgba(255,255,255,0.9);
+          color: #111827;
           font-size: 14px;
-          margin: 0;
+          margin: 10px 0 0 0;
+          font-weight: 500;
         }
         .content { 
           padding: 40px 30px;
@@ -391,11 +395,12 @@ export function generatePrescriptionCreatedEmail(data: PrescriptionEmailData): s
           color: #10b981;
         }
         .footer { 
-          background: #f8f9fa;
+          background: #f9fafb;
           text-align: center;
           padding: 25px;
-          color: #6b7280;
+          color: #6B7280;
           font-size: 13px;
+          border-top: 1px solid #E5E7EB;
         }
         .footer p {
           margin: 5px 0;
@@ -405,7 +410,7 @@ export function generatePrescriptionCreatedEmail(data: PrescriptionEmailData): s
     <body>
       <div class="container">
         <div class="header">
-          <div class="logo">🌿 AuraSutra</div>
+          <img src="https://rsnysvtjmelnojkubdqu.supabase.co/storage/v1/object/public/logos/logo+name_transparent.png" alt="AuraSutra" style="height: 60px; margin-bottom: 10px;" />
           <p class="header-subtitle">Holistic Healthcare Platform</p>
         </div>
         
@@ -437,7 +442,7 @@ export function generatePrescriptionCreatedEmail(data: PrescriptionEmailData): s
             <h3 style="margin-top: 0; color: #10b981; font-size: 18px;">Prescribed Medicines</h3>
             ${medicines.map(medicine => `
               <div class="medicine-item">
-                <div class="medicine-name">💊 ${medicine.name}</div>
+                <div class="medicine-name">${medicine.name}</div>
                 <div class="medicine-details">
                   <div><strong>Dosage:</strong> ${medicine.dosage}</div>
                   <div><strong>Frequency:</strong> ${medicine.frequency}</div>
@@ -461,7 +466,7 @@ export function generatePrescriptionCreatedEmail(data: PrescriptionEmailData): s
           ${recipientType === 'patient' ? `
           <div class="warning-box">
             <p class="warning-text">
-              <strong>⚠️ Important:</strong> Please follow the prescribed dosage and duration exactly as specified. 
+              <strong>Important:</strong> Please follow the prescribed dosage and duration exactly as specified. 
               Do not stop or modify your medication without consulting your doctor first.
             </p>
           </div>
