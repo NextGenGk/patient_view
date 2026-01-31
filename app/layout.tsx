@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+<<<<<<< HEAD
 // Temporarily commented out due to network connectivity issues during build
 // import { Inter } from 'next/font/google';
 // import { Alatsi } from 'next/font/google';
@@ -9,6 +10,15 @@ import { LanguageProvider } from './contexts/LanguageContext';
 // Using system fonts as fallback
 // const inter = Inter({ subsets: ['latin'] });
 // const alatsi = Alatsi({ weight: '400', subsets: ['latin'] });
+=======
+import { Inter } from 'next/font/google';
+import { Alatsi } from 'next/font/google';
+import './globals.css';
+import { Toaster } from 'react-hot-toast';
+
+const inter = Inter({ subsets: ['latin'] });
+const alatsi = Alatsi({ weight: '400', subsets: ['latin'] });
+>>>>>>> 15f2075 (Patien_View final ver)
 
 export const metadata: Metadata = {
   title: 'AuraSutra - Ayurvedic Healthcare Platform',
@@ -24,12 +34,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+<<<<<<< HEAD
         {/* Google Fonts temporarily disabled due to network issues */}
       </head>
       <body className="font-sans">
         <LanguageProvider>
           {children}
         </LanguageProvider>
+=======
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
+      <body className={inter.className}>
+        {children}
+>>>>>>> 15f2075 (Patien_View final ver)
         <Toaster
           position="top-right"
           toastOptions={{

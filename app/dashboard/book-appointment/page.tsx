@@ -4,7 +4,10 @@ import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Calendar, Clock, Video, MapPin, User, Award, Loader2, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+<<<<<<< HEAD
 import { TranslatedText } from '../../components/TranslatedText';
+=======
+>>>>>>> 15f2075 (Patien_View final ver)
 
 interface Doctor {
   did: string;
@@ -76,6 +79,7 @@ export default function BookAppointmentPage() {
       return;
     }
 
+<<<<<<< HEAD
     if (!doctor) {
       toast.error('Doctor information not available');
       return;
@@ -229,6 +233,44 @@ export default function BookAppointmentPage() {
     } catch (error) {
       console.error('Error initiating payment:', error);
       toast.error('Failed to initiate payment');
+=======
+    setSubmitting(true);
+
+    try {
+      const symptomsArray = symptoms
+        .split(',')
+        .map((s) => s.trim())
+        .filter((s) => s.length > 0);
+
+      const response = await fetch('/api/appointments/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          did,
+          scheduled_date: selectedDate,
+          scheduled_time: selectedTime,
+          mode,
+          chief_complaint: chiefComplaint,
+          symptoms: symptomsArray,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setShowSuccess(true);
+        toast.success('Appointment booked successfully!');
+        setTimeout(() => {
+          router.push('/dashboard/appointments');
+        }, 2000);
+      } else {
+        toast.error(data.error || 'Failed to book appointment');
+      }
+    } catch (error) {
+      console.error('Error booking appointment:', error);
+      toast.error('Failed to book appointment');
+    } finally {
+>>>>>>> 15f2075 (Patien_View final ver)
       setSubmitting(false);
     }
   }
@@ -303,10 +345,17 @@ export default function BookAppointmentPage() {
           )}
 
           <div className="flex-1">
+<<<<<<< HEAD
             <h2 className="text-2xl font-bold text-gray-900 mb-2"><TranslatedText>Dr.</TranslatedText> <TranslatedText>{doctor.user.name}</TranslatedText></h2>
             <div className="flex items-center space-x-2 text-gray-600 mb-2">
               <Award className="w-4 h-4" />
               <span className="font-medium"><TranslatedText>{doctor.qualification}</TranslatedText></span>
+=======
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">{doctor.user.name}</h2>
+            <div className="flex items-center space-x-2 text-gray-600 mb-2">
+              <Award className="w-4 h-4" />
+              <span className="font-medium">{doctor.qualification}</span>
+>>>>>>> 15f2075 (Patien_View final ver)
             </div>
             <div className="flex flex-wrap gap-2 mb-3">
               {doctor.specialization?.slice(0, 3).map((spec, idx) => (
@@ -314,13 +363,22 @@ export default function BookAppointmentPage() {
                   key={idx}
                   className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium"
                 >
+<<<<<<< HEAD
                   <TranslatedText>{spec}</TranslatedText>
+=======
+                  {spec}
+>>>>>>> 15f2075 (Patien_View final ver)
                 </span>
               ))}
             </div>
             <div className="flex items-center space-x-4 text-sm text-gray-600">
+<<<<<<< HEAD
               <span>📍 <TranslatedText>{doctor.city}</TranslatedText>, <TranslatedText>{doctor.state}</TranslatedText></span>
               <span>💼 {doctor.years_of_experience} <TranslatedText>years exp</TranslatedText></span>
+=======
+              <span>📍 {doctor.city}, {doctor.state}</span>
+              <span>💼 {doctor.years_of_experience} years exp</span>
+>>>>>>> 15f2075 (Patien_View final ver)
               <span className="text-xl font-bold text-primary-600">₹{doctor.consultation_fee}</span>
             </div>
           </div>
@@ -329,7 +387,11 @@ export default function BookAppointmentPage() {
 
       {/* Booking Form */}
       <form onSubmit={handleSubmit} className="glass-card p-6 rounded-2xl space-y-6">
+<<<<<<< HEAD
         <h3 className="text-xl font-bold text-gray-900"><TranslatedText>Appointment Details</TranslatedText></h3>
+=======
+        <h3 className="text-xl font-bold text-gray-900">Appointment Details</h3>
+>>>>>>> 15f2075 (Patien_View final ver)
 
         {/* Mode Selection */}
         <div>
@@ -372,7 +434,11 @@ export default function BookAppointmentPage() {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             <Calendar className="w-4 h-4 inline mr-1" />
+<<<<<<< HEAD
             <TranslatedText>Appointment Date</TranslatedText>
+=======
+            Appointment Date
+>>>>>>> 15f2075 (Patien_View final ver)
           </label>
           <input
             type="date"
@@ -389,7 +455,11 @@ export default function BookAppointmentPage() {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             <Clock className="w-4 h-4 inline mr-1" />
+<<<<<<< HEAD
             <TranslatedText>Appointment Time</TranslatedText>
+=======
+            Appointment Time
+>>>>>>> 15f2075 (Patien_View final ver)
           </label>
           
           {/* Custom Time Input for Testing */}
@@ -451,6 +521,7 @@ export default function BookAppointmentPage() {
           />
         </div>
 
+<<<<<<< HEAD
         {/* Payment Summary */}
         <div className="bg-gradient-to-br from-primary-50 to-secondary-50 p-6 rounded-xl border-2 border-primary-200">
           <h4 className="text-lg font-semibold text-gray-900 mb-4">💰 Payment Summary</h4>
@@ -475,6 +546,8 @@ export default function BookAppointmentPage() {
           </p>
         </div>
 
+=======
+>>>>>>> 15f2075 (Patien_View final ver)
         {/* Submit Button */}
         <button
           type="submit"
@@ -484,6 +557,7 @@ export default function BookAppointmentPage() {
           {submitting ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
+<<<<<<< HEAD
               <span>Processing Payment...</span>
             </>
           ) : (
@@ -491,6 +565,12 @@ export default function BookAppointmentPage() {
               <span>💳 Proceed to Payment</span>
               <span className="ml-2 font-bold">₹{doctor.consultation_fee}</span>
             </>
+=======
+              <span>Booking Appointment...</span>
+            </>
+          ) : (
+            <span>📅 Book Appointment</span>
+>>>>>>> 15f2075 (Patien_View final ver)
           )}
         </button>
       </form>

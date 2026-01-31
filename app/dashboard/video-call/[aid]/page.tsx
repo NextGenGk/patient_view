@@ -4,7 +4,10 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Video } from 'lucide-react';
 import toast from 'react-hot-toast';
+<<<<<<< HEAD
 import { TranslatedText } from '../../../components/TranslatedText';
+=======
+>>>>>>> 15f2075 (Patien_View final ver)
 
 export default function PatientVideoCallPage() {
   const params = useParams();
@@ -324,7 +327,10 @@ export default function PatientVideoCallPage() {
         </div>
       )}
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 15f2075 (Patien_View final ver)
       {/* Doctor Info Overlay - Only during active call */}
       {appointmentData && !loading && !error && callStartTime && !showPostCallScreen && (
         <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl shadow-lg z-10">
@@ -334,10 +340,17 @@ export default function PatientVideoCallPage() {
             </div>
             <div>
               <p className="text-sm font-bold text-gray-900">
+<<<<<<< HEAD
                 <TranslatedText>Dr.</TranslatedText> <TranslatedText>{appointmentData.doctor?.user?.name || 'Doctor'}</TranslatedText>
               </p>
               <p className="text-xs text-gray-600">
                 <TranslatedText>{appointmentData.doctor?.specialization || 'Specialist'}</TranslatedText>
+=======
+                Dr. {appointmentData.doctor?.user?.name || 'Doctor'}
+              </p>
+              <p className="text-xs text-gray-600">
+                {appointmentData.doctor?.specialization || 'Specialist'}
+>>>>>>> 15f2075 (Patien_View final ver)
               </p>
             </div>
           </div>
@@ -353,10 +366,17 @@ export default function PatientVideoCallPage() {
               <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
                 <Video className="w-10 h-10 text-green-600" />
               </div>
+<<<<<<< HEAD
               <h2 className="text-3xl font-bold text-gray-900 mb-3"><TranslatedText>Consultation Completed!</TranslatedText></h2>
               <p className="text-lg text-gray-600">
                 <TranslatedText>Call Duration:</TranslatedText> <span className="font-bold text-primary-600">
                   {Math.floor(callDurationSeconds / 60)} <TranslatedText>min</TranslatedText> {callDurationSeconds % 60} <TranslatedText>sec</TranslatedText>
+=======
+              <h2 className="text-3xl font-bold text-gray-900 mb-3">Consultation Completed!</h2>
+              <p className="text-lg text-gray-600">
+                Call Duration: <span className="font-bold text-primary-600">
+                  {Math.floor(callDurationSeconds / 60)} min {callDurationSeconds % 60} sec
+>>>>>>> 15f2075 (Patien_View final ver)
                 </span>
               </p>
             </div>
@@ -370,6 +390,7 @@ export default function PatientVideoCallPage() {
                   </span>
                 </div>
                 <div className="flex-1">
+<<<<<<< HEAD
                   <p className="text-sm text-gray-600"><TranslatedText>Consulted with</TranslatedText></p>
                   <p className="font-bold text-gray-900 text-lg"><TranslatedText>Dr.</TranslatedText> <TranslatedText>{appointmentData.doctor?.user?.name}</TranslatedText></p>
                   <p className="text-sm text-gray-600"><TranslatedText>{appointmentData.doctor?.specialization}</TranslatedText></p>
@@ -377,6 +398,15 @@ export default function PatientVideoCallPage() {
               </div>
               <div className="border-t border-gray-200 pt-4">
                 <p className="text-sm text-gray-600 mb-1"><TranslatedText>Appointment Date</TranslatedText></p>
+=======
+                  <p className="text-sm text-gray-600">Consulted with</p>
+                  <p className="font-bold text-gray-900 text-lg">Dr. {appointmentData.doctor?.user?.name}</p>
+                  <p className="text-sm text-gray-600">{appointmentData.doctor?.specialization}</p>
+                </div>
+              </div>
+              <div className="border-t border-gray-200 pt-4">
+                <p className="text-sm text-gray-600 mb-1">Appointment Date</p>
+>>>>>>> 15f2075 (Patien_View final ver)
                 <p className="text-gray-900">
                   {new Date(appointmentData.scheduled_date).toLocaleDateString()} at {appointmentData.scheduled_time}
                 </p>
@@ -389,10 +419,17 @@ export default function PatientVideoCallPage() {
                 onClick={() => router.push('/dashboard/appointments?tab=history')}
                 className="w-full px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-xl font-bold text-lg hover:shadow-xl smooth-transition transform hover:scale-105"
               >
+<<<<<<< HEAD
                 ✓ <TranslatedText>View Appointment History</TranslatedText>
               </button>
               <p className="text-center text-sm text-gray-500">
                 <TranslatedText>Your doctor may send you a prescription shortly</TranslatedText>
+=======
+                ✓ View Appointment History
+              </button>
+              <p className="text-center text-sm text-gray-500">
+                Your doctor may send you a prescription shortly
+>>>>>>> 15f2075 (Patien_View final ver)
               </p>
             </div>
           </div>

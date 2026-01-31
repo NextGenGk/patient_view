@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+<<<<<<< HEAD
 import { Home, Calendar, User, FileText, LogOut, Pill } from 'lucide-react';
 import Link from 'next/link';
 import PatientProfilePicture from '../components/ProfilePicture';
@@ -10,6 +11,10 @@ import { supabase } from '@/lib/shared/supabase';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { TranslatedText } from '../components/TranslatedText';
 >>>>>>> e13a04d (add: razorpay payment integration, multilingual | add clinic --patient)
+=======
+import Sidebar from './components/Sidebar';
+import LiveCallNotifier from './components/LiveCallNotifier';
+>>>>>>> 15f2075 (Patien_View final ver)
 
 export default async function DashboardLayout({
   children,
@@ -24,6 +29,7 @@ export default async function DashboardLayout({
 
   const user = await getUser();
 
+<<<<<<< HEAD
   // Check user role from database
   if (user?.id) {
     const { data: userData, error } = await supabase
@@ -111,6 +117,26 @@ export default async function DashboardLayout({
         <LiveCallNotifier />
         <div className="p-8">{children}</div>
       </main>
+=======
+  return (
+    <div className="h-screen flex items-center justify-center p-4">
+      {/* Floating Glass Panel Container */}
+      <div className="glass-panel w-full max-w-[100%] h-full flex overflow-hidden relative">
+
+        {/* Sidebar */}
+        <Sidebar user={user} />
+
+        {/* Main Content Area */}
+        <main className="flex-1 overflow-y-auto relative z-10">
+          <LiveCallNotifier />
+          <div className="p-8">{children}</div>
+        </main>
+
+        {/* Decorative background elements inside glass for depth */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-400/10 rounded-full blur-[100px] pointer-events-none -z-0"></div>
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-400/10 rounded-full blur-[100px] pointer-events-none -z-0"></div>
+      </div>
+>>>>>>> 15f2075 (Patien_View final ver)
     </div>
   );
 }
