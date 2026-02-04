@@ -71,10 +71,14 @@ export function useVoiceToText() {
                 }
             }
 
+<<<<<<< HEAD
             // Only append final transcripts to avoid duplication
             if (finalTranscript) {
                 setTranscript((prev) => prev + finalTranscript);
             }
+=======
+            setTranscript((prev) => prev + finalTranscript + interimTranscript);
+>>>>>>> 15f2075 (Patien_View final ver)
         };
 
         recognition.onerror = (event: SpeechRecognitionErrorEvent) => {

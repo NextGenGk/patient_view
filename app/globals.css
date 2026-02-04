@@ -1,4 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Noto+Sans+Devanagari:wght@100..900&display=swap');
+<<<<<<< HEAD
+=======
+@import url('https://fonts.googleapis.com/css2?family=Alatsi&display=swap');
+>>>>>>> 15f2075 (Patien_View final ver)
 
 @tailwind base;
 @tailwind components;
@@ -6,12 +10,17 @@
 
 @layer base {
   :root {
+<<<<<<< HEAD
     --background: 0 0% 100%;
+=======
+    --background: 210 40% 96.1%;
+>>>>>>> 15f2075 (Patien_View final ver)
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
+<<<<<<< HEAD
     --primary: 142.1 76.2% 36.3%;        /* Green */
     --primary-foreground: 0 0% 100%;
     --secondary: 210 40% 96.1%;          /* Light Blue-Gray */
@@ -49,19 +58,49 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 142.1 76.2% 36.3%;
   }
+=======
+    --primary: 175 80% 25%;
+    /* Deep Teal */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 175 80% 25%;
+    --radius: 1rem;
+  }
+>>>>>>> 15f2075 (Patien_View final ver)
 }
 
 @layer base {
   * {
     @apply border-border;
   }
+<<<<<<< HEAD
   body {
     @apply bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 text-foreground min-h-screen;
+=======
+
+  body {
+    @apply text-foreground min-h-screen overflow-x-hidden;
+    background: radial-gradient(circle at 10% 10%, rgba(132, 222, 219, 0.4) 0%, rgba(255, 255, 255, 0) 50%),
+      radial-gradient(circle at 90% 90%, rgba(100, 200, 180, 0.3) 0%, rgba(255, 255, 255, 0) 50%),
+      linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    /* Fallback / Base */
+    background: linear-gradient(120deg, #add8e6 0%, #a8edea 40%, #e0f7fa 100%);
+>>>>>>> 15f2075 (Patien_View final ver)
     font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif;
   }
 }
 
 @layer components {
+<<<<<<< HEAD
   /* Glassmorphic Card */
   .glass-card {
     @apply bg-white/70 backdrop-blur-sm border border-white/20 shadow-sm transition-all duration-300;
@@ -96,6 +135,45 @@
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
+=======
+
+  /* Main floating glass panel for the app container */
+  .glass-panel {
+    @apply bg-white/40 backdrop-blur-xl border border-white/60 shadow-2xl shadow-teal-900/10 rounded-[40px];
+  }
+
+  /* Specific Card Styles from Image */
+
+  /* Dark Teal Gradient Cards (Hero, Quick Stats) */
+  /* Reduced intensity by ~30% total */
+  .card-dark {
+    @apply bg-gradient-to-br from-[#2E6F63] to-[#408E80] text-white border border-white/10 shadow-lg relative overflow-hidden hover:scale-[1.01] hover:shadow-xl transition-all duration-300;
+  }
+
+  /* Light/White Cards (Bottom row) */
+  .card-light {
+    @apply bg-white/60 backdrop-blur-md border border-white/50 shadow-sm text-gray-800 hover:bg-white/70 transition-all duration-300 hover:scale-[1.01] hover:shadow-lg;
+  }
+
+  /* Search Bar Style */
+  .search-pill {
+    @apply bg-white/50 backdrop-blur-sm px-6 py-2.5 rounded-full flex items-center gap-3 border border-white/40 text-sm text-gray-600 focus-within:bg-white/80 focus-within:shadow-md transition-all;
+  }
+
+  .nav-item-active {
+    @apply bg-[#2E6F63] text-white font-medium shadow-md;
+  }
+
+  .nav-item-inactive {
+    @apply text-gray-600 hover:text-[#2E6F63] hover:bg-[#2E6F63]/5 font-medium;
+  }
+}
+
+/* Custom Scrollbar for inner content */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+>>>>>>> 15f2075 (Patien_View final ver)
 }
 
 ::-webkit-scrollbar-track {
@@ -103,6 +181,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
+<<<<<<< HEAD
   @apply bg-green-200 rounded-full hover:bg-green-300 transition-colors;
 }
 
@@ -159,3 +238,7 @@
 .animate-scale-in {
   animation: scale-in 0.2s ease-out;
 }
+=======
+  @apply bg-teal-800/20 rounded-full hover:bg-teal-800/30 transition-colors;
+}
+>>>>>>> 15f2075 (Patien_View final ver)

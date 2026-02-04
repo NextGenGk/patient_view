@@ -5,8 +5,11 @@ import { useRouter } from 'next/navigation';
 import { Video } from 'lucide-react';
 import toast from 'react-hot-toast';
 
+<<<<<<< HEAD
 import { TranslatedText } from '../../components/TranslatedText';
 
+=======
+>>>>>>> 15f2075 (Patien_View final ver)
 export default function LiveCallNotifier() {
   const router = useRouter();
   const [activeCallId, setActiveCallId] = useState<string | null>(null);
@@ -54,10 +57,17 @@ export default function LiveCallNotifier() {
                       </div>
                       <div className="ml-3 flex-1">
                         <p className="text-sm font-bold text-gray-900">
+<<<<<<< HEAD
                           <TranslatedText>Incoming Video Call</TranslatedText>
                         </p>
                         <p className="mt-1 text-sm text-gray-500">
                           <TranslatedText>Dr.</TranslatedText> <TranslatedText>{call.doctor?.user?.name || 'Doctor'}</TranslatedText> <TranslatedText>has started the consultation.</TranslatedText>
+=======
+                          Incoming Video Call
+                        </p>
+                        <p className="mt-1 text-sm text-gray-500">
+                          Dr. {call.doctor?.user?.name || 'Doctor'} has started the consultation.
+>>>>>>> 15f2075 (Patien_View final ver)
                         </p>
                       </div>
                     </div>
@@ -70,7 +80,11 @@ export default function LiveCallNotifier() {
                       }}
                       className="w-full border border-transparent rounded-none rounded-r-2xl p-4 flex items-center justify-center text-sm font-bold text-primary-600 hover:text-primary-500 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500"
                     >
+<<<<<<< HEAD
                       <TranslatedText>Join Now</TranslatedText>
+=======
+                      Join Now
+>>>>>>> 15f2075 (Patien_View final ver)
                     </button>
                   </div>
                 </div>

@@ -29,8 +29,11 @@ export async function POST(request: NextRequest) {
             mode,
             chief_complaint,
             symptoms = [],
+<<<<<<< HEAD
             payment_id,
             payment_status = 'pending',
+=======
+>>>>>>> 15f2075 (Patien_View final ver)
         } = body;
 
         // Validate required fields
@@ -112,13 +115,20 @@ export async function POST(request: NextRequest) {
                 pid,
                 did,
                 mode,
+<<<<<<< HEAD
                 status: 'confirmed',
+=======
+                status: 'scheduled',
+>>>>>>> 15f2075 (Patien_View final ver)
                 scheduled_date,
                 scheduled_time,
                 chief_complaint,
                 symptoms: symptoms.length > 0 ? symptoms : null,
+<<<<<<< HEAD
                 payment_id: payment_id || null,
                 payment_status,
+=======
+>>>>>>> 15f2075 (Patien_View final ver)
             })
             .select()
             .single();
@@ -131,6 +141,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
+<<<<<<< HEAD
         // Send notifications to patient and doctor
         try {
             const appointmentDate = new Date(scheduled_date).toLocaleDateString('en-US', {
@@ -181,6 +192,8 @@ export async function POST(request: NextRequest) {
             // Don't fail the appointment creation if notification fails
         }
 
+=======
+>>>>>>> 15f2075 (Patien_View final ver)
         return NextResponse.json({
             success: true,
             appointment,

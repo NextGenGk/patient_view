@@ -28,8 +28,11 @@ interface DoctorProfileModalProps {
   onClose: () => void;
 }
 
+<<<<<<< HEAD
 import { TranslatedText } from '../../components/TranslatedText';
 
+=======
+>>>>>>> 15f2075 (Patien_View final ver)
 export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorProfileModalProps) {
   // Close on Escape key
   useEffect(() => {
@@ -85,6 +88,7 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
             
             <div className="flex-1">
               <h2 className="text-3xl font-black text-gray-900 mb-1">
+<<<<<<< HEAD
                 <TranslatedText>Dr.</TranslatedText> <TranslatedText>{doctor.user.name}</TranslatedText>
               </h2>
               <p className="text-primary-600 font-semibold mb-3"><TranslatedText>{doctor.qualification}</TranslatedText></p>
@@ -92,6 +96,15 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
               <div className="flex items-center space-x-2 text-gray-600">
                 <MapPin className="w-4 h-4" />
                 <span className="text-sm"><TranslatedText>{doctor.city}</TranslatedText>, <TranslatedText>{doctor.state}</TranslatedText></span>
+=======
+                Dr. {doctor.user.name}
+              </h2>
+              <p className="text-primary-600 font-semibold mb-3">{doctor.qualification}</p>
+              
+              <div className="flex items-center space-x-2 text-gray-600">
+                <MapPin className="w-4 h-4" />
+                <span className="text-sm">{doctor.city}, {doctor.state}</span>
+>>>>>>> 15f2075 (Patien_View final ver)
               </div>
             </div>
           </div>
@@ -103,7 +116,11 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
           <div>
             <h3 className="text-lg font-black text-gray-900 mb-3 flex items-center space-x-2">
               <Award className="w-5 h-5 text-primary-600" />
+<<<<<<< HEAD
               <TranslatedText as="span">Specializations</TranslatedText>
+=======
+              <span>Specializations</span>
+>>>>>>> 15f2075 (Patien_View final ver)
             </h3>
             <div className="flex flex-wrap gap-2">
               {doctor.specialization.map((spec, index) => (
@@ -111,7 +128,11 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
                   key={index}
                   className="px-4 py-2 bg-primary-50 text-primary-700 rounded-full text-sm font-semibold border border-primary-100"
                 >
+<<<<<<< HEAD
                   <TranslatedText>{spec}</TranslatedText>
+=======
+                  {spec}
+>>>>>>> 15f2075 (Patien_View final ver)
                 </span>
               ))}
             </div>
@@ -122,17 +143,28 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
             <div className="bg-gray-50 p-4 rounded-xl">
               <div className="flex items-center space-x-2 text-gray-600 mb-1">
                 <Briefcase className="w-4 h-4" />
+<<<<<<< HEAD
                 <TranslatedText as="span" className="text-xs font-semibold">Experience</TranslatedText>
               </div>
               <p className="text-xl font-black text-gray-900">
                 {doctor.years_of_experience} <TranslatedText>years</TranslatedText>
+=======
+                <span className="text-xs font-semibold">Experience</span>
+              </div>
+              <p className="text-xl font-black text-gray-900">
+                {doctor.years_of_experience} years
+>>>>>>> 15f2075 (Patien_View final ver)
               </p>
             </div>
 
             <div className="bg-gray-50 p-4 rounded-xl">
               <div className="flex items-center space-x-2 text-gray-600 mb-1">
                 <DollarSign className="w-4 h-4" />
+<<<<<<< HEAD
                 <TranslatedText as="span" className="text-xs font-semibold">Consultation Fee</TranslatedText>
+=======
+                <span className="text-xs font-semibold">Consultation Fee</span>
+>>>>>>> 15f2075 (Patien_View final ver)
               </div>
               <p className="text-xl font-black text-primary-600">
                 ₹{doctor.consultation_fee}
@@ -145,7 +177,11 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
             <div>
               <h3 className="text-lg font-black text-gray-900 mb-3 flex items-center space-x-2">
                 <Languages className="w-5 h-5 text-primary-600" />
+<<<<<<< HEAD
                 <TranslatedText as="span">Languages</TranslatedText>
+=======
+                <span>Languages</span>
+>>>>>>> 15f2075 (Patien_View final ver)
               </h3>
               <div className="flex flex-wrap gap-2">
                 {doctor.languages.map((lang, index) => (
@@ -153,7 +189,11 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
                     key={index}
                     className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium"
                   >
+<<<<<<< HEAD
                     <TranslatedText>{lang}</TranslatedText>
+=======
+                    {lang}
+>>>>>>> 15f2075 (Patien_View final ver)
                   </span>
                 ))}
               </div>
@@ -163,8 +203,13 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
           {/* Bio */}
           {doctor.bio && (
             <div>
+<<<<<<< HEAD
               <TranslatedText as="h3" className="text-lg font-black text-gray-900 mb-3">About Doctor</TranslatedText>
               <p className="text-gray-700 leading-relaxed"><TranslatedText>{doctor.bio}</TranslatedText></p>
+=======
+              <h3 className="text-lg font-black text-gray-900 mb-3">About Doctor</h3>
+              <p className="text-gray-700 leading-relaxed">{doctor.bio}</p>
+>>>>>>> 15f2075 (Patien_View final ver)
             </div>
           )}
 
@@ -174,7 +219,11 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
             className="block w-full px-8 py-4 bg-gradient-to-r from-primary-600 to-emerald-600 text-white rounded-2xl font-black text-center hover:shadow-2xl hover:scale-105 smooth-transition"
           >
             <Calendar className="w-5 h-5 inline-block mr-2" />
+<<<<<<< HEAD
             <TranslatedText>Book Appointment</TranslatedText>
+=======
+            Book Appointment
+>>>>>>> 15f2075 (Patien_View final ver)
           </Link>
         </div>
       </div>

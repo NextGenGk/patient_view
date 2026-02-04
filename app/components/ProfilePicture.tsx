@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from 'react';
 
+<<<<<<< HEAD
 export default function PatientProfilePicture({ uid }: { uid?: string }) {
+=======
+export default function PatientProfilePicture({ uid, fallback }: { uid?: string; fallback?: string }) {
+>>>>>>> 15f2075 (Patien_View final ver)
   const [profileImage, setProfileImage] = useState<string>('');
 
   useEffect(() => {
@@ -15,7 +19,11 @@ export default function PatientProfilePicture({ uid }: { uid?: string }) {
     try {
       const response = await fetch('/api/sync-user');
       const { user } = await response.json();
+<<<<<<< HEAD
       
+=======
+
+>>>>>>> 15f2075 (Patien_View final ver)
       if (user?.profile_image_url) {
         setProfileImage(user.profile_image_url);
       }
@@ -24,7 +32,17 @@ export default function PatientProfilePicture({ uid }: { uid?: string }) {
     }
   }
 
+<<<<<<< HEAD
   if (!profileImage) return null;
+=======
+  if (!profileImage) {
+    return (
+      <span className="text-primary-700 font-semibold text-lg">
+        {fallback || 'U'}
+      </span>
+    );
+  }
+>>>>>>> 15f2075 (Patien_View final ver)
 
   return (
     <img
