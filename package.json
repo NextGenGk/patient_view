@@ -25,23 +25,15 @@
     "clsx": "^2.0.0",
     "date-fns": "^3.0.6",
     "framer-motion": "^10.16.16",
-<<<<<<< HEAD
     "lingo.dev": "^0.125.5",
     "lucide-react": "^0.294.0",
     "next": "^14.2.25",
     "razorpay": "^2.9.6",
-=======
-    "lucide-react": "^0.294.0",
-    "next": "^14.2.25",
->>>>>>> 15f2075 (Patien_View final ver)
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
     "recharts": "^2.10.3",
-<<<<<<< HEAD
     "resend": "^6.9.1",
-=======
->>>>>>> 15f2075 (Patien_View final ver)
     "tailwind-merge": "^2.2.0"
   },
   "devDependencies": {
@@ -56,8 +48,4 @@
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.3.3"
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 15f2075 (Patien_View final ver)
