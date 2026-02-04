@@ -83,8 +83,55 @@ export default function BookAppointmentPage() {
 
     setSubmitting(true);
 
+
+    // Check if consultation fee is valid
+    if (typeof doctor.consultation_fee !== 'number') {
+      toast.error('Consultation fee not defined for this doctor');
+      setSubmitting(false);
+      return;
+    }
+
+    // Handle free consultation
+    if (doctor.consultation_fee === 0) {
+       try {
+          const appointmentResponse = await fetch('/api/appointments/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              did,
+              scheduled_date: selectedDate,
+              scheduled_time: selectedTime,
+              mode,
+              chief_complaint: chiefComplaint,
+              symptoms: symptoms.split(',').map((s) => s.trim()).filter((s) => s.length > 0),
+              payment_id: 'free_consultation',
+              payment_status: 'completed',
+            }),
+          });
+
+          const appointmentData = await appointmentResponse.json();
+
+          if (appointmentData.success) {
+            setShowSuccess(true);
+            toast.success('Appointment booked successfully!');
+            setTimeout(() => {
+              router.push('/dashboard/appointments');
+            }, 2000);
+          } else {
+            toast.error(appointmentData.error || 'Failed to book appointment');
+          }
+       } catch (error) {
+         console.error('Error booking free appointment:', error);
+         toast.error('Failed to process appointment');
+       } finally {
+         setSubmitting(false);
+       }
+       return;
+    }
+
     try {
       // Step 1: Create Razorpay order
+      console.log('Creating order with fee:', doctor.consultation_fee);
       const orderResponse = await fetch('/api/payments/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -103,10 +150,12 @@ export default function BookAppointmentPage() {
       const orderData = await orderResponse.json();
 
       if (!orderData.success) {
-        toast.error('Failed to create payment order');
+        console.error('Order creation failed:', orderData);
+        toast.error(`Payment initialization failed: ${orderData.error || 'Unknown error'}`);
         setSubmitting(false);
         return;
       }
+
 
       // Step 2: Initialize Razorpay checkout
       const options = {

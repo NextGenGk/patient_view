@@ -9,6 +9,12 @@ const razorpay = new Razorpay({
 
 export async function POST(request: NextRequest) {
   try {
+    // SECURITY: Log availability of keys (masked)
+    console.log('Razorpay Config Check:', {
+      keyIdPresent: !!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      keySecretPresent: !!process.env.RAZORPAY_KEY_SECRET,
+    });
+
     // Get authenticated user
     const { getUser } = getKindeServerSession();
     const kindeUser = await getUser();
@@ -18,9 +24,13 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+    console.log('Create Order Payload:', body); // Debugging payload
+
     const { amount, currency = "INR", receipt, notes } = body;
 
+    // Validate amount
     if (!amount || amount <= 0) {
+      console.error('Invalid amount received:', amount);
       return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
     }
 
@@ -32,16 +42,23 @@ export async function POST(request: NextRequest) {
       notes: notes || {},
     };
 
+    console.log('Razorpay Order Options:', options);
+
     const order = await razorpay.orders.create(options);
 
     return NextResponse.json({
       success: true,
       order,
     });
-  } catch (error) {
-    console.error("Razorpay order creation error:", error);
+  } catch (error: any) {
+    // Log detailed Razorpay error
+    console.error("Razorpay order creation error:", JSON.stringify(error, null, 2));
+
+    // Check for specific Razorpay error code
+    const errorMessage = error.error?.description || error.message || "Failed to create payment order";
+
     return NextResponse.json(
-      { error: "Failed to create payment order" },
+      { error: errorMessage, details: error },
       { status: 500 },
     );
   }
