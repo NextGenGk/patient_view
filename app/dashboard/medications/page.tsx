@@ -14,6 +14,15 @@ interface AdherenceRecord {
 }
 
 import { TranslatedText } from '../../components/TranslatedText';
+
+export default function MedicationsPage() {
+  const [pending, setPending] = useState<AdherenceRecord[]>([]);
+  const [stats, setStats] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchAdherence();
   }, []);
 
   async function fetchAdherence() {
