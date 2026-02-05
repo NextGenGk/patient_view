@@ -44,9 +44,9 @@ export default async function DashboardLayout({
   ];
 
   return (
-    <div className="min-h-screen flex">
-      {/* Sidebar */}
-      <aside className="w-64 glass-card border-r border-gray-200/50 min-h-screen sticky top-0 flex flex-col">
+    <div className="min-h-screen flex p-8" style={{ backgroundColor: '#a5d8dd' }}>
+      {/* Sidebar - Textured with Fixed Width */}
+      <aside className="w-64 border-r border-gray-200/50 min-h-full sticky top-0 flex flex-col bg-[url('/landing-bg.jpg')] bg-cover bg-center shrink-0 rounded-l-3xl overflow-hidden shadow-lg">
         <div className="p-6">
           <Link href="/dashboard" className="flex items-center space-x-1">
             <img src="/Logos/logo_transparent.png" alt="AuraSutra" className="h-12" />
@@ -54,12 +54,12 @@ export default async function DashboardLayout({
           </Link>
         </div>
 
-        <nav className="flex-1 px-4 space-y-2">
+        <nav className="flex-1 px-4 space-y-2 relative z-10">
           {navigation.map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50/50 smooth-transition text-gray-700 hover:text-primary-600 group"
+              className="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-white/50 smooth-transition text-gray-700 hover:text-emerald-700 group"
             >
               <item.icon className="w-5 h-5 group-hover:scale-110 smooth-transition" />
               <span className="font-medium">
@@ -69,17 +69,17 @@ export default async function DashboardLayout({
           ))}
           
           {/* Language Switcher */}
-          <div className="pt-4 mt-4 border-t border-gray-200/50">
+          <div className="pt-4 mt-4 border-t border-gray-200/50 px-4">
             <LanguageSwitcher />
           </div>
         </nav>
 
-        <div className="p-4 border-t border-gray-200/50">
-          <div className="flex items-center space-x-3 px-4 py-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center overflow-hidden">
+        <div className="p-4 border-t border-gray-200/50 relative z-10">
+          <div className="flex items-center space-x-3 px-4 py-3 bg-white/40 rounded-xl backdrop-blur-sm">
+            <div className="w-10 h-10 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full flex items-center justify-center overflow-hidden border-2 border-white">
               <PatientProfilePicture uid={user?.id} />
               {!user?.id && (
-                <span className="text-primary-700 font-semibold">
+                <span className="text-emerald-700 font-semibold">
                   {user?.given_name?.[0] || 'U'}
                 </span>
               )}
@@ -104,9 +104,9 @@ export default async function DashboardLayout({
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50">
+      <main className="flex-1 overflow-auto bg-white min-w-0 rounded-r-3xl shadow-lg">
         <LiveCallNotifier />
-        <div className="p-8">{children}</div>
+        <div className="p-8 font-poppins">{children}</div>
       </main>
     </div>
   );

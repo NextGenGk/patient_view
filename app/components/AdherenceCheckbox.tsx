@@ -3,124 +3,91 @@
 import { useState } from 'react';
 import { CheckCircle2, Clock } from 'lucide-react';
 import toast from 'react-hot-toast';
-<<<<<<< HEAD
 import { TranslatedText } from './TranslatedText';
-=======
->>>>>>> 15f2075 (Patien_View final ver)
 
 interface AdherenceCheckboxProps {
   adherenceId: string;
   medicineName: string;
   scheduledTime: string;
-  isTaken: boolean;
   scheduledDate: string;
-  onUpdate?: () => void;
+  isTaken: boolean;
+  onUpdate: () => void;
+  size?: 'small' | 'large';
   showTime?: boolean;
-  size?: 'small' | 'medium' | 'large';
 }
 
 export default function AdherenceCheckbox({
   adherenceId,
   medicineName,
   scheduledTime,
-  isTaken: initialTaken,
   scheduledDate,
+  isTaken,
   onUpdate,
-  showTime = true,
-  size = 'medium'
+  size = 'small',
+  showTime = true
 }: AdherenceCheckboxProps) {
-  const [isTaken, setIsTaken] = useState(initialTaken);
   const [isUpdating, setIsUpdating] = useState(false);
-
-  const isOverdue = () => {
-    const now = new Date();
-    const today = now.toISOString().split('T')[0];
-    
-    if (scheduledDate < today) return true;
-    if (scheduledDate === today) {
-      const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:00`;
-      return scheduledTime < currentTime;
-    }
-    return false;
-  };
-
-  const formatTime = (time: string): string => {
-    if (!time) return '';
-    const [hours, minutes] = time.split(':');
-    const h = parseInt(hours);
-    const ampm = h >= 12 ? 'PM' : 'AM';
-    const displayHour = h % 12 || 12;
-    return `${displayHour}:${minutes} ${ampm}`;
-  };
 
   const handleToggle = async () => {
     if (isUpdating) return;
-
+    
     setIsUpdating(true);
-    const newStatus = !isTaken;
-
     try {
-      const response = await fetch('/api/patient/adherence', {
+      const response = await fetch(`/api/patient/adherence/${adherenceId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          adherence_id: adherenceId,
-          is_taken: newStatus,
-          is_skipped: false
-        })
+        body: JSON.stringify({ is_taken: !isTaken })
       });
 
       const data = await response.json();
-
+      
       if (data.success) {
-        setIsTaken(newStatus);
-        toast.success(newStatus ? '✅ Marked as taken!' : 'Unmarked');
-        if (onUpdate) onUpdate();
+        toast.success(isTaken ? 'Marked as not taken' : 'Marked as taken');
+        onUpdate();
       } else {
         toast.error('Failed to update');
       }
     } catch (error) {
       console.error('Error updating adherence:', error);
-      toast.error('Network error');
+      toast.error('Failed to update');
     } finally {
       setIsUpdating(false);
     }
   };
 
-  const sizeClasses = {
-    small: 'w-5 h-5',
-    medium: 'w-6 h-6',
-    large: 'w-7 h-7'
+  const formatTime = (time: string) => {
+    const [hours, minutes] = time.split(':');
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+    return `${displayHour}:${minutes} ${ampm}`;
   };
 
-  const overdueStatus = !isTaken && isOverdue();
+  // Check if overdue
+  const now = new Date();
+  const scheduledDateTime = new Date(`${scheduledDate}T${scheduledTime}`);
+  const isOverdue = !isTaken && now > scheduledDateTime;
+  const overdueStatus = isOverdue ? 'overdue' : null;
 
   return (
-    <div className={`flex items-center space-x-3 ${
-      isTaken ? 'opacity-75' : ''
-    }`}>
-      <div className="relative">
-        <input
-          type="checkbox"
-          checked={isTaken}
-          disabled={isUpdating}
-          onChange={handleToggle}
-          className={`${sizeClasses[size]} rounded-lg border-2 ${
-            overdueStatus ? 'border-red-400' : 'border-gray-300'
-          } text-green-600 focus:ring-2 focus:ring-green-500 cursor-pointer disabled:cursor-not-allowed transition-all`}
-        />
-      </div>
-      
+    <div 
+      onClick={handleToggle}
+      className={`flex items-center justify-between p-4 rounded-xl cursor-pointer transition-all ${
+        isTaken 
+          ? 'bg-green-50 border border-green-200' 
+          : isOverdue
+          ? 'bg-red-50 border border-red-200 hover:bg-red-100'
+          : 'bg-gray-50 border border-gray-200 hover:bg-gray-100'
+      } ${isUpdating ? 'opacity-50 pointer-events-none' : ''}`}
+    >
       <div className="flex-1">
-        <p className={`font-medium ${
-          isTaken ? 'text-green-900 line-through' : 
-          overdueStatus ? 'text-red-900' : 'text-gray-900'
+        <p className={`font-bold ${
+          size === 'large' ? 'text-base' : 'text-sm'
+        } ${
+          isTaken ? 'text-gray-500 line-through' : 
+          isOverdue ? 'text-red-700' : 'text-gray-900'
         }`}>
-<<<<<<< HEAD
           <TranslatedText>{medicineName}</TranslatedText>
-=======
-          {medicineName}
->>>>>>> 15f2075 (Patien_View final ver)
         </p>
         
         {showTime && (
@@ -133,11 +100,7 @@ export default function AdherenceCheckbox({
               overdueStatus ? 'text-red-600 font-semibold' : 'text-gray-600'
             }`}>
               {formatTime(scheduledTime)}
-<<<<<<< HEAD
               {overdueStatus && <span className="ml-1">• <TranslatedText>OVERDUE</TranslatedText></span>}
-=======
-              {overdueStatus && <span className="ml-1">• OVERDUE</span>}
->>>>>>> 15f2075 (Patien_View final ver)
             </span>
           </div>
         )}

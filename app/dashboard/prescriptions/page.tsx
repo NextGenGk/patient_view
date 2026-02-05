@@ -41,32 +41,17 @@ interface AdherenceRecord {
   prescription_id: string;
 }
 
-<<<<<<< HEAD
 import { TranslatedText } from '../../components/TranslatedText';
 
-=======
->>>>>>> 15f2075 (Patien_View final ver)
-export default function PatientPrescriptionsPage() {
+export default function PrescriptionsPage() {
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
-  const [adherenceMap, setAdherenceMap] = useState<Map<string, AdherenceRecord[]>>(new Map());
-  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState<string | null>(null);
+  const [selectedPrescription, setSelectedPrescription] = useState<Prescription | null>(null);
   const [activeTab, setActiveTab] = useState<Record<string, 'schedule' | 'progress'>>({});
+  const [adherenceMap, setAdherenceMap] = useState<Map<string, AdherenceRecord[]>>(new Map());
   const [stats, setStats] = useState<Record<string, any>>({});
-  const [profileId, setProfileId] = useState<string | null>(null);
+  const [profileId, setProfileId] = useState<string>('');
 
-  const [selectedPrescription, setSelectedPrescription] = useState<any>(null);
-
-<<<<<<< HEAD
-=======
-  // ... (keep fetchAdherenceStats, useEffect, fetchData, toggleMedicine, getTodayAdherence - verify toggleCard is removed/unused)
-
-  // NOTE: toggleCard and expandedCards are no longer needed for Grid View, 
-  // but keeping them in state definitions if we don't want to break existing logic elsewhere 
-  // until fully refactored. For this replacement, we focus on the return JSX.
-
->>>>>>> 15f2075 (Patien_View final ver)
   async function fetchAdherenceStats(prescriptionId: string) {
      if (!profileId) return;
      try {
@@ -145,30 +130,16 @@ export default function PatientPrescriptionsPage() {
   return (
     <div className="space-y-6">
       <div>
-<<<<<<< HEAD
         <TranslatedText as="h1" className="text-3xl font-bold text-gray-900">My Prescriptions</TranslatedText>
-        <TranslatedText as="p" className="text-gray-600 mt-1">Track your daily medicine adherence</TranslatedText>
-=======
-        <h1 className="text-3xl font-bold text-gray-900">My Prescriptions</h1>
-        <p className="text-gray-600 mt-1">Track your daily medicine adherence</p>
->>>>>>> 15f2075 (Patien_View final ver)
-      </div>
+        <TranslatedText as="p" className="text-gray-600 mt-1">Track your daily medicine adherence</TranslatedText>      </div>
 
       {prescriptions.length === 0 ? (
         <div className="glass-card p-12 rounded-2xl text-center">
           <Pill className="w-16 h-16 text-gray-300 mx-auto mb-4 animate-bounce" />
-<<<<<<< HEAD
           <TranslatedText as="h3" className="text-lg font-semibold text-gray-700 mb-2">No Prescriptions Yet</TranslatedText>
           <TranslatedText as="p" className="text-gray-500">
             Your doctor will send prescriptions here after your consultations
-          </TranslatedText>
-=======
-          <h3 className="text-lg font-semibold text-gray-700 mb-2">No Prescriptions Yet</h3>
-          <p className="text-gray-500">
-            Your doctor will send prescriptions here after your consultations
-          </p>
->>>>>>> 15f2075 (Patien_View final ver)
-        </div>
+          </TranslatedText>        </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {prescriptions.map((prescription) => (
@@ -196,14 +167,8 @@ export default function PatientPrescriptionsPage() {
 
                 {/* Bottom Label (Always Visible) */}
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white translate-y-2 group-hover:translate-y-full transition-transform duration-300 flex flex-col justify-end h-full">
-<<<<<<< HEAD
                    <p className="text-white/90 text-xl font-bold mb-1 drop-shadow-sm"><TranslatedText>Dr.</TranslatedText> <TranslatedText>{prescription.doctors?.users?.name || 'Unknown'}</TranslatedText></p>
-                   <h3 className="font-medium text-base text-gray-200 leading-snug break-words drop-shadow-md"><TranslatedText>{prescription.diagnosis}</TranslatedText></h3>
-=======
-                   <p className="text-white/90 text-xl font-bold mb-1 drop-shadow-sm">Dr. {prescription.doctors?.users?.name || 'Unknown'}</p>
-                   <h3 className="font-medium text-base text-gray-200 leading-snug break-words drop-shadow-md">{prescription.diagnosis}</h3>
->>>>>>> 15f2075 (Patien_View final ver)
-                </div>
+                   <h3 className="font-medium text-base text-gray-200 leading-snug break-words drop-shadow-md"><TranslatedText>{prescription.diagnosis}</TranslatedText></h3>                </div>
 
               {/* Hover Overlay */}
               <div className="absolute inset-0 bg-black/80 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center p-6 text-center transform scale-95 group-hover:scale-100">
@@ -214,14 +179,8 @@ export default function PatientPrescriptionsPage() {
                         <FileText className="w-8 h-8 text-white" />
                      )}
                   </div>
-<<<<<<< HEAD
                   <h3 className="text-white font-bold text-lg mb-1"><TranslatedText>Dr.</TranslatedText> <TranslatedText>{prescription.doctors?.users?.name}</TranslatedText></h3>
-                  <p className="text-gray-300 text-sm mb-6 line-clamp-2"><TranslatedText>{prescription.diagnosis}</TranslatedText></p>
-=======
-                  <h3 className="text-white font-bold text-lg mb-1">Dr. {prescription.doctors?.users?.name}</h3>
-                  <p className="text-gray-300 text-sm mb-6 line-clamp-2">{prescription.diagnosis}</p>
->>>>>>> 15f2075 (Patien_View final ver)
-                  
+                  <p className="text-gray-300 text-sm mb-6 line-clamp-2"><TranslatedText>{prescription.diagnosis}</TranslatedText></p>                  
                   <button
                     onClick={() => {
                         setSelectedPrescription(prescription);
@@ -230,12 +189,7 @@ export default function PatientPrescriptionsPage() {
                     }}
                     className="py-3 px-8 bg-white text-primary-900 rounded-full font-bold hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 flex items-center gap-2"
                   >
-<<<<<<< HEAD
-                    <TranslatedText as="span">Open Details</TranslatedText>
-=======
-                    <span>Open Details</span>
->>>>>>> 15f2075 (Patien_View final ver)
-                    <ChevronDown className="w-4 h-4 rotate-270" />
+                    <TranslatedText as="span">Open Details</TranslatedText>                    <ChevronDown className="w-4 h-4 rotate-270" />
                   </button>
               </div>
             </div>
@@ -255,16 +209,10 @@ export default function PatientPrescriptionsPage() {
                        <Pill className="w-6 h-6 text-primary-600" />
                     </div>
                     <div>
-<<<<<<< HEAD
                        <h2 className="text-2xl font-bold text-gray-900"><TranslatedText>{selectedPrescription.diagnosis}</TranslatedText></h2>
                        <p className="text-gray-500 text-sm">
                         <TranslatedText>Prescribed by Dr.</TranslatedText> <TranslatedText>{selectedPrescription.doctors?.users?.name}</TranslatedText>
-                       </p>
-=======
-                       <h2 className="text-2xl font-bold text-gray-900">{selectedPrescription.diagnosis}</h2>
-                       <p className="text-gray-500 text-sm">Prescribed by Dr. {selectedPrescription.doctors?.users?.name}</p>
->>>>>>> 15f2075 (Patien_View final ver)
-                    </div>
+                       </p>                    </div>
                  </div>
                  <button 
                    onClick={() => setSelectedPrescription(null)}
@@ -289,12 +237,7 @@ export default function PatientPrescriptionsPage() {
                           }`}
                         >
                           <CheckCircle2 className="w-4 h-4" />
-<<<<<<< HEAD
-                          <TranslatedText>Today's Schedule</TranslatedText>
-=======
-                          Today's Schedule
->>>>>>> 15f2075 (Patien_View final ver)
-                        </button>
+                          <TranslatedText>Today's Schedule</TranslatedText>                        </button>
                         <button
                           onClick={() => {
                             setActiveTab(prev => ({...prev, [selectedPrescription.prescription_id]: 'progress'}));
@@ -307,12 +250,7 @@ export default function PatientPrescriptionsPage() {
                           }`}
                         >
                           <Clock className="w-4 h-4" />
-<<<<<<< HEAD
-                          <TranslatedText>Progress & Stats</TranslatedText>
-=======
-                          Progress & Stats
->>>>>>> 15f2075 (Patien_View final ver)
-                        </button>
+                          <TranslatedText>Progress & Stats</TranslatedText>                        </button>
                     </div>
                   </div>
 
@@ -324,12 +262,7 @@ export default function PatientPrescriptionsPage() {
                              <div className="flex items-center justify-between mb-6">
                                 <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                                    <Calendar className="w-5 h-5 text-primary-500" />
-<<<<<<< HEAD
-                                   <TranslatedText>Checklist for</TranslatedText> {new Date().toLocaleDateString()}
-=======
-                                   Checklist for {new Date().toLocaleDateString()}
->>>>>>> 15f2075 (Patien_View final ver)
-                                </h3>
+                                   <TranslatedText>Checklist for</TranslatedText> {new Date().toLocaleDateString()}                                </h3>
                              </div>
 
                              <div className="space-y-3">
@@ -352,14 +285,8 @@ export default function PatientPrescriptionsPage() {
                                            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-2 shadow-sm">
                                               <CheckCircle2 className="w-6 h-6 text-green-500" />
                                            </div>
-<<<<<<< HEAD
                                            <p className="font-medium text-gray-600"><TranslatedText>No medicines scheduled for today</TranslatedText></p>
-                                           <TranslatedText as="p" className="text-sm">You are all caught up!</TranslatedText>
-=======
-                                           <p className="font-medium text-gray-600">No medicines scheduled for today</p>
-                                           <p className="text-sm">You are all caught up!</p>
->>>>>>> 15f2075 (Patien_View final ver)
-                                        </div>
+                                           <TranslatedText as="p" className="text-sm">You are all caught up!</TranslatedText>                                        </div>
                                       );
                                    }
 
@@ -383,14 +310,8 @@ export default function PatientPrescriptionsPage() {
                           {/* Instructions Block */}
                           {selectedPrescription.instructions && (
                              <div className="p-5 bg-yellow-50 rounded-2xl border border-yellow-100">
-<<<<<<< HEAD
                                 <TranslatedText as="h4" className="font-bold text-yellow-800 mb-2 text-sm uppercase tracking-wide">Doctor's Instructions</TranslatedText>
-                                <p className="text-yellow-900 leading-relaxed"><TranslatedText>{selectedPrescription.instructions}</TranslatedText></p>
-=======
-                                <h4 className="font-bold text-yellow-800 mb-2 text-sm uppercase tracking-wide">Doctor's Instructions</h4>
-                                <p className="text-yellow-900 leading-relaxed">{selectedPrescription.instructions}</p>
->>>>>>> 15f2075 (Patien_View final ver)
-                             </div>
+                                <p className="text-yellow-900 leading-relaxed"><TranslatedText>{selectedPrescription.instructions}</TranslatedText></p>                             </div>
                           )}
                       </div>
                   ) : (
@@ -413,17 +334,11 @@ export default function PatientPrescriptionsPage() {
                                     </svg>
                                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                                        <span className="text-5xl font-black text-gray-900 tracking-tight">{stats[selectedPrescription.prescription_id]?.adherence_rate}%</span>
-<<<<<<< HEAD
-                                       <TranslatedText as="span" className="text-xs text-gray-500 font-bold uppercase tracking-wider mt-1">Adherence</TranslatedText>
-=======
-                                       <span className="text-xs text-gray-500 font-bold uppercase tracking-wider mt-1">Adherence</span>
->>>>>>> 15f2075 (Patien_View final ver)
-                                    </div>
+                                       <TranslatedText as="span" className="text-xs text-gray-500 font-bold uppercase tracking-wider mt-1">Adherence</TranslatedText>                                    </div>
                                  </div>
                                  <div className="grid grid-cols-3 gap-4 w-full text-center">
                                     <div className="p-3 bg-gray-50 rounded-xl">
                                        <div className="text-2xl font-bold text-gray-900">{stats[selectedPrescription.prescription_id]?.total_doses}</div>
-<<<<<<< HEAD
                                        <div className="text-xs text-gray-500 font-medium"><TranslatedText>Total Doses</TranslatedText></div>
                                     </div>
                                     <div className="p-3 bg-green-50 rounded-xl text-green-700">
@@ -432,19 +347,7 @@ export default function PatientPrescriptionsPage() {
                                     </div>
                                     <div className="p-3 bg-red-50 rounded-xl text-red-700">
                                        <div className="text-2xl font-bold">{stats[selectedPrescription.prescription_id]?.skipped}</div>
-                                       <div className="text-xs font-medium opacity-80"><TranslatedText>Skipped</TranslatedText></div>
-=======
-                                       <div className="text-xs text-gray-500 font-medium">Total Doses</div>
-                                    </div>
-                                    <div className="p-3 bg-green-50 rounded-xl text-green-700">
-                                       <div className="text-2xl font-bold">{stats[selectedPrescription.prescription_id]?.taken}</div>
-                                       <div className="text-xs font-medium opacity-80">Taken</div>
-                                    </div>
-                                    <div className="p-3 bg-red-50 rounded-xl text-red-700">
-                                       <div className="text-2xl font-bold">{stats[selectedPrescription.prescription_id]?.skipped}</div>
-                                       <div className="text-xs font-medium opacity-80">Skipped</div>
->>>>>>> 15f2075 (Patien_View final ver)
-                                    </div>
+                                       <div className="text-xs font-medium opacity-80"><TranslatedText>Skipped</TranslatedText></div>                                    </div>
                                  </div>
                               </div>
 
@@ -452,25 +355,14 @@ export default function PatientPrescriptionsPage() {
                               <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                                  <h3 className="font-bold text-gray-900 mb-6 flex items-center gap-2">
                                     <Pill className="w-5 h-5 text-gray-400" />
-<<<<<<< HEAD
-                                    <TranslatedText>Medicine Breakdown</TranslatedText>
-=======
-                                    Medicine Breakdown
->>>>>>> 15f2075 (Patien_View final ver)
-                                 </h3>
+                                    <TranslatedText>Medicine Breakdown</TranslatedText>                                 </h3>
                                  <div className="space-y-6">
                                      {stats[selectedPrescription.prescription_id]?.medicine_breakdown?.map((med: any, idx: number) => (
                                         <div key={idx} className="group">
                                            <div className="flex justify-between items-end mb-2">
                                               <div>
-<<<<<<< HEAD
                                                  <span className="font-bold text-gray-700 block text-sm"><TranslatedText>{med.medicine_name}</TranslatedText></span>
-                                                 <span className="text-xs text-gray-400 font-medium">{med.taken}/{med.total} <TranslatedText>doses</TranslatedText></span>
-=======
-                                                 <span className="font-bold text-gray-700 block text-sm">{med.medicine_name}</span>
-                                                 <span className="text-xs text-gray-400 font-medium">{med.taken}/{med.total} doses</span>
->>>>>>> 15f2075 (Patien_View final ver)
-                                              </div>
+                                                 <span className="text-xs text-gray-400 font-medium">{med.taken}/{med.total} <TranslatedText>doses</TranslatedText></span>                                              </div>
                                               <span className="font-bold text-primary-600 text-lg">{med.adherence_rate}%</span>
                                            </div>
                                            <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
@@ -489,12 +381,7 @@ export default function PatientPrescriptionsPage() {
                         ) : (
                            <div className="text-center py-24">
                               <div className="w-12 h-12 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin mx-auto mb-4"></div>
-<<<<<<< HEAD
-                              <p className="text-gray-500 font-medium"><TranslatedText>Calculating progress...</TranslatedText></p>
-=======
-                              <p className="text-gray-500 font-medium">Calculating progress...</p>
->>>>>>> 15f2075 (Patien_View final ver)
-                           </div>
+                              <p className="text-gray-500 font-medium"><TranslatedText>Calculating progress...</TranslatedText></p>                           </div>
                         )}
                       </div>
                   )}

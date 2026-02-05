@@ -3,6 +3,7 @@
 import { X, Award, MapPin, DollarSign, Briefcase, Languages, Calendar } from 'lucide-react';
 import { useEffect } from 'react';
 import Link from 'next/link';
+import { TranslatedText } from '../../components/TranslatedText';
 
 interface Doctor {
   did: string;
@@ -28,99 +29,72 @@ interface DoctorProfileModalProps {
   onClose: () => void;
 }
 
-<<<<<<< HEAD
-import { TranslatedText } from '../../components/TranslatedText';
-
-=======
->>>>>>> 15f2075 (Patien_View final ver)
 export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorProfileModalProps) {
-  // Close on Escape key
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    
     if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
     }
-    
     return () => {
-      document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen || !doctor) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
-      {/* Backdrop */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div 
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
-      />
+      ></div>
       
-      {/* Modal Content */}
-      <div className="relative bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-scale-in">
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-colors z-10"
-        >
-          <X className="w-6 h-6 text-gray-600" />
-        </button>
+      <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-enter overflow-hidden">
+        {/* Header with Image Background or Gradient */}
+        <div className="relative bg-gradient-to-br from-primary-50 to-emerald-50 p-8 pt-12">
+           <button 
+             onClick={onClose}
+             className="absolute top-4 right-4 p-2 bg-white/50 hover:bg-white rounded-full transition-colors"
+           >
+             <X className="w-6 h-6 text-gray-600" />
+           </button>
 
-        {/* Profile Header */}
-        <div className="bg-gradient-to-br from-primary-50 to-emerald-50 p-8 rounded-t-3xl">
-          <div className="flex items-start space-x-6">
-            {doctor.user.profile_image_url ? (
-              <img
-                src={doctor.user.profile_image_url}
-                alt={doctor.user.name}
-                className="w-24 h-24 rounded-2xl object-cover border-4 border-white shadow-lg"
-              />
-            ) : (
-              <div className="w-24 h-24 bg-gradient-to-br from-primary-100 to-emerald-100 rounded-2xl flex items-center justify-center border-4 border-white shadow-lg">
-                <Award className="w-12 h-12 text-primary-600" />
+           <div className="flex flex-col sm:flex-row items-center sm:items-end -mb-16 sm:space-x-6 space-y-4 sm:space-y-0 relative z-10">
+              <div className="w-32 h-32 rounded-[1.5rem] border-4 border-white shadow-xl overflow-hidden bg-white">
+                {doctor.user.profile_image_url ? (
+                  <img src={doctor.user.profile_image_url} alt={doctor.user.name} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-primary-100 flex items-center justify-center text-4xl text-primary-600 font-bold">
+                    {doctor.user.name.charAt(0)}
+                  </div>
+                )}
               </div>
-            )}
-            
-            <div className="flex-1">
-              <h2 className="text-3xl font-black text-gray-900 mb-1">
-<<<<<<< HEAD
-                <TranslatedText>Dr.</TranslatedText> <TranslatedText>{doctor.user.name}</TranslatedText>
-              </h2>
-              <p className="text-primary-600 font-semibold mb-3"><TranslatedText>{doctor.qualification}</TranslatedText></p>
               
-              <div className="flex items-center space-x-2 text-gray-600">
-                <MapPin className="w-4 h-4" />
-                <span className="text-sm"><TranslatedText>{doctor.city}</TranslatedText>, <TranslatedText>{doctor.state}</TranslatedText></span>
-=======
-                Dr. {doctor.user.name}
-              </h2>
-              <p className="text-primary-600 font-semibold mb-3">{doctor.qualification}</p>
-              
-              <div className="flex items-center space-x-2 text-gray-600">
-                <MapPin className="w-4 h-4" />
-                <span className="text-sm">{doctor.city}, {doctor.state}</span>
->>>>>>> 15f2075 (Patien_View final ver)
+              <div className="text-center sm:text-left pb-4">
+                <h2 className="text-3xl font-black text-gray-900 leading-tight">
+                  <TranslatedText>{doctor.user.name}</TranslatedText>
+                </h2>
+                <div className="flex items-center justify-center sm:justify-start space-x-2 text-gray-600 font-medium mt-1">
+                  <MapPin className="w-4 h-4" />
+                  <span>
+                    <TranslatedText>{doctor.city}</TranslatedText>, <TranslatedText>{doctor.state}</TranslatedText>
+                  </span>
+                </div>
               </div>
-            </div>
-          </div>
+           </div>
         </div>
 
+        {/* Spacer for overlapping avatar */}
+        <div className="h-12 bg-white"></div>
+
         {/* Content */}
-        <div className="p-8 space-y-6">
+        <div className="p-8 space-y-8 bg-white">
           {/* Specializations */}
           <div>
             <h3 className="text-lg font-black text-gray-900 mb-3 flex items-center space-x-2">
               <Award className="w-5 h-5 text-primary-600" />
-<<<<<<< HEAD
               <TranslatedText as="span">Specializations</TranslatedText>
-=======
-              <span>Specializations</span>
->>>>>>> 15f2075 (Patien_View final ver)
             </h3>
             <div className="flex flex-wrap gap-2">
               {doctor.specialization.map((spec, index) => (
@@ -128,45 +102,35 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
                   key={index}
                   className="px-4 py-2 bg-primary-50 text-primary-700 rounded-full text-sm font-semibold border border-primary-100"
                 >
-<<<<<<< HEAD
                   <TranslatedText>{spec}</TranslatedText>
-=======
-                  {spec}
->>>>>>> 15f2075 (Patien_View final ver)
                 </span>
               ))}
+              {doctor.custom_specializations && (
+                 <span className="px-4 py-2 bg-secondary-50 text-secondary-700 rounded-full text-sm font-semibold border border-secondary-100">
+                    <TranslatedText>{doctor.custom_specializations}</TranslatedText>
+                 </span>
+              )}
             </div>
           </div>
 
           {/* Details Grid */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gray-50 p-4 rounded-xl">
-              <div className="flex items-center space-x-2 text-gray-600 mb-1">
+            <div className="bg-gray-50 p-5 rounded-2xl border border-gray-100">
+              <div className="flex items-center space-x-2 text-gray-500 mb-1">
                 <Briefcase className="w-4 h-4" />
-<<<<<<< HEAD
-                <TranslatedText as="span" className="text-xs font-semibold">Experience</TranslatedText>
+                <TranslatedText as="span" className="text-xs font-bold uppercase tracking-wider">Experience</TranslatedText>
               </div>
-              <p className="text-xl font-black text-gray-900">
-                {doctor.years_of_experience} <TranslatedText>years</TranslatedText>
-=======
-                <span className="text-xs font-semibold">Experience</span>
-              </div>
-              <p className="text-xl font-black text-gray-900">
-                {doctor.years_of_experience} years
->>>>>>> 15f2075 (Patien_View final ver)
+              <p className="text-2xl font-black text-gray-900">
+                {doctor.years_of_experience} <TranslatedText as="span" className="text-lg font-medium text-gray-500">years</TranslatedText>
               </p>
             </div>
 
-            <div className="bg-gray-50 p-4 rounded-xl">
-              <div className="flex items-center space-x-2 text-gray-600 mb-1">
+            <div className="bg-emerald-50 p-5 rounded-2xl border border-emerald-100">
+              <div className="flex items-center space-x-2 text-emerald-600 mb-1">
                 <DollarSign className="w-4 h-4" />
-<<<<<<< HEAD
-                <TranslatedText as="span" className="text-xs font-semibold">Consultation Fee</TranslatedText>
-=======
-                <span className="text-xs font-semibold">Consultation Fee</span>
->>>>>>> 15f2075 (Patien_View final ver)
+                <TranslatedText as="span" className="text-xs font-bold uppercase tracking-wider">Consultation Fee</TranslatedText>
               </div>
-              <p className="text-xl font-black text-primary-600">
+              <p className="text-2xl font-black text-emerald-700">
                 ₹{doctor.consultation_fee}
               </p>
             </div>
@@ -177,11 +141,7 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
             <div>
               <h3 className="text-lg font-black text-gray-900 mb-3 flex items-center space-x-2">
                 <Languages className="w-5 h-5 text-primary-600" />
-<<<<<<< HEAD
                 <TranslatedText as="span">Languages</TranslatedText>
-=======
-                <span>Languages</span>
->>>>>>> 15f2075 (Patien_View final ver)
               </h3>
               <div className="flex flex-wrap gap-2">
                 {doctor.languages.map((lang, index) => (
@@ -189,11 +149,7 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
                     key={index}
                     className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium"
                   >
-<<<<<<< HEAD
                     <TranslatedText>{lang}</TranslatedText>
-=======
-                    {lang}
->>>>>>> 15f2075 (Patien_View final ver)
                   </span>
                 ))}
               </div>
@@ -203,27 +159,18 @@ export default function DoctorProfileModal({ doctor, isOpen, onClose }: DoctorPr
           {/* Bio */}
           {doctor.bio && (
             <div>
-<<<<<<< HEAD
               <TranslatedText as="h3" className="text-lg font-black text-gray-900 mb-3">About Doctor</TranslatedText>
-              <p className="text-gray-700 leading-relaxed"><TranslatedText>{doctor.bio}</TranslatedText></p>
-=======
-              <h3 className="text-lg font-black text-gray-900 mb-3">About Doctor</h3>
-              <p className="text-gray-700 leading-relaxed">{doctor.bio}</p>
->>>>>>> 15f2075 (Patien_View final ver)
+              <p className="text-gray-600 leading-relaxed bg-gray-50 p-4 rounded-xl border border-gray-100"><TranslatedText>{doctor.bio}</TranslatedText></p>
             </div>
           )}
 
           {/* Book Appointment Button */}
           <Link
             href={`/dashboard/book-appointment?did=${doctor.did}`}
-            className="block w-full px-8 py-4 bg-gradient-to-r from-primary-600 to-emerald-600 text-white rounded-2xl font-black text-center hover:shadow-2xl hover:scale-105 smooth-transition"
+            className="block w-full px-8 py-5 bg-gradient-to-r from-primary-600 to-emerald-600 text-white rounded-2xl font-bold text-lg text-center shadow-lg hover:shadow-xl hover:scale-[1.02] smooth-transition"
           >
-            <Calendar className="w-5 h-5 inline-block mr-2" />
-<<<<<<< HEAD
+            <Calendar className="w-5 h-5 inline-block mr-2 mb-1" />
             <TranslatedText>Book Appointment</TranslatedText>
-=======
-            Book Appointment
->>>>>>> 15f2075 (Patien_View final ver)
           </Link>
         </div>
       </div>

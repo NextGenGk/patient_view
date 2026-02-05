@@ -42,12 +42,16 @@ export function useVoiceToText() {
         if (typeof window !== 'undefined') {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             setIsSupported(!!SpeechRecognition);
+            
+            if (!SpeechRecognition) {
+                console.warn('Speech Recognition API is not supported in this browser');
+            }
         }
     }, []);
 
     const startRecording = () => {
         if (!isSupported) {
-            alert('Voice recognition is not supported in your browser. Please use Chrome or Edge.');
+            alert('Voice recognition is not supported in your browser. Please use Chrome, Edge, or Safari.');
             return;
         }
 
@@ -62,7 +66,8 @@ export function useVoiceToText() {
             let finalTranscript = '';
             let interimTranscript = '';
 
-            for (let i = event.resultIndex; i < event.results.length; i++) {
+            // Get all results from the beginning to build complete transcript
+            for (let i = 0; i < event.results.length; i++) {
                 const transcript = event.results[i][0].transcript;
                 if (event.results[i].isFinal) {
                     finalTranscript += transcript + ' ';
@@ -71,28 +76,58 @@ export function useVoiceToText() {
                 }
             }
 
-<<<<<<< HEAD
-            // Only append final transcripts to avoid duplication
-            if (finalTranscript) {
-                setTranscript((prev) => prev + finalTranscript);
-            }
-=======
-            setTranscript((prev) => prev + finalTranscript + interimTranscript);
->>>>>>> 15f2075 (Patien_View final ver)
+            // Show both final and interim results for live feedback
+            setTranscript(finalTranscript + interimTranscript);
         };
 
         recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-            console.error('Speech recognition error:', event.error);
+            console.error('Speech recognition error:', event.error, event.message);
+            
+            // Provide user-friendly error messages
+            let errorMessage = 'Voice recognition error occurred.';
+            switch (event.error) {
+                case 'not-allowed':
+                case 'service-not-allowed':
+                    errorMessage = 'Microphone access denied. Please allow microphone permissions in your browser settings.';
+                    break;
+                case 'no-speech':
+                    errorMessage = 'No speech detected. Please try again.';
+                    break;
+                case 'audio-capture':
+                    errorMessage = 'No microphone found. Please check your microphone connection.';
+                    break;
+                case 'network':
+                    errorMessage = 'Network error. Please check your internet connection.';
+                    break;
+                case 'aborted':
+                    // User stopped recording, no error message needed
+                    break;
+                default:
+                    errorMessage = `Voice recognition error: ${event.error}`;
+            }
+            
+            if (event.error !== 'aborted') {
+                alert(errorMessage);
+            }
+            
             setIsRecording(false);
         };
 
         recognition.onend = () => {
+            console.log('Speech recognition ended');
             setIsRecording(false);
         };
 
-        recognition.start();
-        recognitionRef.current = recognition;
-        setIsRecording(true);
+        try {
+            recognition.start();
+            console.log('Speech recognition started');
+            recognitionRef.current = recognition;
+            setIsRecording(true);
+        } catch (error) {
+            console.error('Failed to start recognition:', error);
+            alert('Failed to start voice recognition. Please try again.');
+            setIsRecording(false);
+        }
     };
 
     const stopRecording = () => {

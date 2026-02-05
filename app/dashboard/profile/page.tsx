@@ -4,21 +4,14 @@ import { useEffect, useState } from 'react';
 import { User, Save, Loader2, Camera } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-<<<<<<< HEAD
 import { TranslatedText } from '../../components/TranslatedText';
 import { useTranslation } from '../../hooks/useTranslation';
 
-=======
->>>>>>> 15f2075 (Patien_View final ver)
-export default function PatientProfilePage() {
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+export default function ProfilePage() {
   const [formData, setFormData] = useState({
-    // User data
     name: '',
     phone: '',
     email: '',
-    // Patient data
     date_of_birth: '',
     gender: '',
     blood_group: '',
@@ -32,19 +25,18 @@ export default function PatientProfilePage() {
     allergies: [] as string[],
     chronic_conditions: [] as string[],
   });
-
-  const [uid, setUid] = useState('');
-  const [profileImage, setProfileImage] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
-<<<<<<< HEAD
-  
-  const { text: selectText } = useTranslation('Select');
-  const { text: maleText } = useTranslation('Male');
-  const { text: femaleText } = useTranslation('Female');
-  const { text: otherText } = useTranslation('Other');
-  const { text: preferNotToSayText } = useTranslation('Prefer not to say');
-=======
->>>>>>> 15f2075 (Patien_View final ver)
+  const [profileImage, setProfileImage] = useState('');
+  const [uid, setUid] = useState('');
+
+  // Translation texts (hardcoded - TranslatedText will handle translation)
+  const selectText = 'Select';
+  const maleText = 'Male';
+  const femaleText = 'Female';
+  const otherText = 'Other';
+  const preferNotToSayText = 'Prefer not to say';
 
   useEffect(() => {
     fetchProfile();
@@ -206,14 +198,8 @@ export default function PatientProfilePage() {
   return (
     <div className="space-y-6">
       <div>
-<<<<<<< HEAD
         <TranslatedText as="h1" className="text-3xl font-bold text-gray-900 mb-2">My Profile</TranslatedText>
-        <TranslatedText as="p" className="text-gray-600">Update your personal and medical information</TranslatedText>
-=======
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">My Profile</h1>
-        <p className="text-gray-600">Update your personal and medical information</p>
->>>>>>> 15f2075 (Patien_View final ver)
-      </div>
+        <TranslatedText as="p" className="text-gray-600">Update your personal and medical information</TranslatedText>      </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Profile Picture */}
@@ -241,12 +227,7 @@ export default function PatientProfilePage() {
             <div>
               <label className="cursor-pointer px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-xl font-semibold hover:shadow-lg smooth-transition inline-flex items-center space-x-2">
                 <Camera className="w-5 h-5" />
-<<<<<<< HEAD
-                <TranslatedText as="span">Upload Photo</TranslatedText>
-=======
-                <span>Upload Photo</span>
->>>>>>> 15f2075 (Patien_View final ver)
-                <input
+                <TranslatedText as="span">Upload Photo</TranslatedText>                <input
                   type="file"
                   accept="image/*"
                   onChange={handleImageUpload}
@@ -254,12 +235,7 @@ export default function PatientProfilePage() {
                   disabled={uploading}
                 />
               </label>
-<<<<<<< HEAD
-              <TranslatedText as="p" className="text-sm text-gray-500 mt-2">JPG, PNG or GIF. Max 5MB.</TranslatedText>
-=======
-              <p className="text-sm text-gray-500 mt-2">JPG, PNG or GIF. Max 5MB.</p>
->>>>>>> 15f2075 (Patien_View final ver)
-            </div>
+              <TranslatedText as="p" className="text-sm text-gray-500 mt-2">JPG, PNG or GIF. Max 5MB.</TranslatedText>            </div>
           </div>
         </div>
 
@@ -267,22 +243,12 @@ export default function PatientProfilePage() {
         <div className="glass-card p-6 rounded-2xl">
           <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
             <User className="w-5 h-5" />
-<<<<<<< HEAD
-            <TranslatedText as="span">Personal Information</TranslatedText>
-=======
-            <span>Personal Information</span>
->>>>>>> 15f2075 (Patien_View final ver)
-          </h2>
+            <TranslatedText as="span">Personal Information</TranslatedText>          </h2>
           
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-<<<<<<< HEAD
-                <TranslatedText>Full Name</TranslatedText> *
-=======
-                Full Name *
->>>>>>> 15f2075 (Patien_View final ver)
-              </label>
+                <TranslatedText>Full Name</TranslatedText> *              </label>
               <input
                 type="text"
                 value={formData.name}
@@ -294,12 +260,7 @@ export default function PatientProfilePage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-<<<<<<< HEAD
-                <TranslatedText>Phone Number</TranslatedText>
-=======
-                Phone Number
->>>>>>> 15f2075 (Patien_View final ver)
-              </label>
+                <TranslatedText>Phone Number</TranslatedText>              </label>
               <input
                 type="tel"
                 value={formData.phone}
@@ -310,12 +271,7 @@ export default function PatientProfilePage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-<<<<<<< HEAD
-                <TranslatedText>Email (Read-only)</TranslatedText>
-=======
-                Email (Read-only)
->>>>>>> 15f2075 (Patien_View final ver)
-              </label>
+                <TranslatedText>Email (Read-only)</TranslatedText>              </label>
               <input
                 type="email"
                 value={formData.email}
@@ -326,12 +282,7 @@ export default function PatientProfilePage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-<<<<<<< HEAD
-                <TranslatedText>Date of Birth</TranslatedText>
-=======
-                Date of Birth
->>>>>>> 15f2075 (Patien_View final ver)
-              </label>
+                <TranslatedText>Date of Birth</TranslatedText>              </label>
               <input
                 type="date"
                 value={formData.date_of_birth}
@@ -342,52 +293,28 @@ export default function PatientProfilePage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-<<<<<<< HEAD
-                <TranslatedText>Gender</TranslatedText>
-=======
-                Gender
->>>>>>> 15f2075 (Patien_View final ver)
-              </label>
+                <TranslatedText>Gender</TranslatedText>              </label>
               <select
                 value={formData.gender}
                 onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500"
               >
-<<<<<<< HEAD
                 <option value="">{selectText}</option>
                 <option value="male">{maleText}</option>
                 <option value="female">{femaleText}</option>
                 <option value="other">{otherText}</option>
-                <option value="prefer_not_to_say">{preferNotToSayText}</option>
-=======
-                <option value="">Select</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-                <option value="prefer_not_to_say">Prefer not to say</option>
->>>>>>> 15f2075 (Patien_View final ver)
-              </select>
+                <option value="prefer_not_to_say">{preferNotToSayText}</option>              </select>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-<<<<<<< HEAD
-                <TranslatedText>Blood Group</TranslatedText>
-=======
-                Blood Group
->>>>>>> 15f2075 (Patien_View final ver)
-              </label>
+                <TranslatedText>Blood Group</TranslatedText>              </label>
               <select
                 value={formData.blood_group}
                 onChange={(e) => setFormData({ ...formData, blood_group: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500"
               >
-<<<<<<< HEAD
-                <option value="">{selectText}</option>
-=======
-                <option value="">Select</option>
->>>>>>> 15f2075 (Patien_View final ver)
-                <option value="A+">A+</option>
+                <option value="">{selectText}</option>                <option value="A+">A+</option>
                 <option value="A-">A-</option>
                 <option value="B+">B+</option>
                 <option value="B-">B-</option>
@@ -402,21 +329,11 @@ export default function PatientProfilePage() {
 
         {/* Address */}
         <div className="glass-card p-6 rounded-2xl">
-<<<<<<< HEAD
-          <TranslatedText as="h2" className="text-xl font-bold text-gray-900 mb-4">Address</TranslatedText>
-=======
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Address</h2>
->>>>>>> 15f2075 (Patien_View final ver)
-          
+          <TranslatedText as="h2" className="text-xl font-bold text-gray-900 mb-4">Address</TranslatedText>          
           <div className="grid gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-<<<<<<< HEAD
-                <TranslatedText>Address Line 1</TranslatedText>
-=======
-                Address Line 1
->>>>>>> 15f2075 (Patien_View final ver)
-              </label>
+                <TranslatedText>Address Line 1</TranslatedText>              </label>
               <input
                 type="text"
                 value={formData.address_line1}
@@ -427,12 +344,7 @@ export default function PatientProfilePage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-<<<<<<< HEAD
-                <TranslatedText>Address Line 2</TranslatedText>
-=======
-                Address Line 2
->>>>>>> 15f2075 (Patien_View final ver)
-              </label>
+                <TranslatedText>Address Line 2</TranslatedText>              </label>
               <input
                 type="text"
                 value={formData.address_line2}
@@ -444,12 +356,7 @@ export default function PatientProfilePage() {
             <div className="grid md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-<<<<<<< HEAD
-                  <TranslatedText>City</TranslatedText>
-=======
-                  City
->>>>>>> 15f2075 (Patien_View final ver)
-                </label>
+                  <TranslatedText>City</TranslatedText>                </label>
                 <input
                   type="text"
                   value={formData.city}
@@ -460,12 +367,7 @@ export default function PatientProfilePage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-<<<<<<< HEAD
-                  <TranslatedText>State</TranslatedText> / Province
-=======
-                  State
->>>>>>> 15f2075 (Patien_View final ver)
-                </label>
+                  <TranslatedText>State</TranslatedText> / Province                </label>
                 <input
                   type="text"
                   value={formData.state}
@@ -476,12 +378,7 @@ export default function PatientProfilePage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-<<<<<<< HEAD
-                  <TranslatedText>Postal Code</TranslatedText>
-=======
-                  Postal Code
->>>>>>> 15f2075 (Patien_View final ver)
-                </label>
+                  <TranslatedText>Postal Code</TranslatedText>                </label>
                 <input
                   type="text"
                   value={formData.postal_code}
@@ -495,21 +392,11 @@ export default function PatientProfilePage() {
 
         {/* Emergency Contact */}
         <div className="glass-card p-6 rounded-2xl">
-<<<<<<< HEAD
-          <TranslatedText as="h2" className="text-xl font-bold text-gray-900 mb-4">Emergency Contact</TranslatedText>
-=======
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Emergency Contact</h2>
->>>>>>> 15f2075 (Patien_View final ver)
-          
+          <TranslatedText as="h2" className="text-xl font-bold text-gray-900 mb-4">Emergency Contact</TranslatedText>          
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-<<<<<<< HEAD
-                <TranslatedText>Contact Name</TranslatedText>
-=======
-                Contact Name
->>>>>>> 15f2075 (Patien_View final ver)
-              </label>
+                <TranslatedText>Contact Name</TranslatedText>              </label>
               <input
                 type="text"
                 value={formData.emergency_contact_name}
@@ -520,12 +407,7 @@ export default function PatientProfilePage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-<<<<<<< HEAD
-                <TranslatedText>Contact Phone</TranslatedText>
-=======
-                Contact Phone
->>>>>>> 15f2075 (Patien_View final ver)
-              </label>
+                <TranslatedText>Contact Phone</TranslatedText>              </label>
               <input
                 type="tel"
                 value={formData.emergency_contact_phone}
@@ -546,21 +428,11 @@ export default function PatientProfilePage() {
             {saving ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-<<<<<<< HEAD
-                <TranslatedText as="span">Saving...</TranslatedText>
-=======
-                <span>Saving...</span>
->>>>>>> 15f2075 (Patien_View final ver)
-              </>
+                <TranslatedText as="span">Saving...</TranslatedText>              </>
             ) : (
               <>
                 <Save className="w-5 h-5" />
-<<<<<<< HEAD
-                <TranslatedText as="span">Save Changes</TranslatedText>
-=======
-                <span>Save Changes</span>
->>>>>>> 15f2075 (Patien_View final ver)
-              </>
+                <TranslatedText as="span">Save Changes</TranslatedText>              </>
             )}
           </button>
         </div>

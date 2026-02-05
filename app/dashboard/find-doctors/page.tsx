@@ -3,15 +3,9 @@
 import { useEffect, useState } from 'react';
 import { Search, User, Award, MapPin } from 'lucide-react';
 import toast from 'react-hot-toast';
-<<<<<<< HEAD
 import DoctorProfileModal from '../components/DoctorProfileModal';
 import { TranslatedText } from '../../components/TranslatedText';
 import { useTranslation } from '../../hooks/useTranslation';
-=======
-import Link from 'next/link';
-import DoctorProfileModal from '../components/DoctorProfileModal';
->>>>>>> 15f2075 (Patien_View final ver)
-
 interface Doctor {
   did: string;
   specialization: string[];
@@ -39,7 +33,6 @@ export default function FindDoctorsPage() {
   const [selectedCity, setSelectedCity] = useState('all');
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
 
-<<<<<<< HEAD
   const { text: searchPlaceholder } = useTranslation('Search by doctor name, specialization, or location...');
   const { text: allSpecsText } = useTranslation('All Specializations');
   const { text: allCitiesText } = useTranslation('All Cities');
@@ -47,12 +40,7 @@ export default function FindDoctorsPage() {
   useEffect(() => {
     fetchDoctors();
     const interval = setInterval(fetchDoctors, 30000);
-    return () => clearInterval(interval);
-=======
-  useEffect(() => {
-    fetchDoctors();
->>>>>>> 15f2075 (Patien_View final ver)
-  }, []);
+    return () => clearInterval(interval);  }, []);
 
   useEffect(() => {
     filterDoctors();
@@ -135,14 +123,8 @@ export default function FindDoctorsPage() {
 
       {/* Compact Header */}
       <div className="mb-4">
-<<<<<<< HEAD
         <TranslatedText as="h1" className="text-3xl font-black text-gray-900 mb-1">Find Ayurvedic Doctors</TranslatedText>
-        <TranslatedText as="p" className="text-gray-600 text-sm">Connect with verified Ayurvedic practitioners</TranslatedText>
-=======
-        <h1 className="text-3xl font-black text-gray-900 mb-1">Find Ayurvedic Doctors</h1>
-        <p className="text-gray-600 text-sm">Connect with verified Ayurvedic practitioners</p>
->>>>>>> 15f2075 (Patien_View final ver)
-      </div>
+        <TranslatedText as="p" className="text-gray-600 text-sm">Connect with verified Ayurvedic practitioners</TranslatedText>      </div>
 
       {/* Search and Filters */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
@@ -152,59 +134,34 @@ export default function FindDoctorsPage() {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-<<<<<<< HEAD
-            placeholder={searchPlaceholder}
-=======
-            placeholder="Search by doctor name, specialization, or location..."
->>>>>>> 15f2075 (Patien_View final ver)
-            className="w-full pl-14 pr-4 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:bg-white transition-all font-medium"
+            placeholder={searchPlaceholder}            className="w-full pl-14 pr-4 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:bg-white transition-all font-medium"
           />
         </div>
 
         <div className="grid md:grid-cols-2 gap-4">
           <div>
-<<<<<<< HEAD
             <label className="block text-sm font-bold text-gray-700 mb-2">
               <TranslatedText>Specialization</TranslatedText>
-            </label>
-=======
-            <label className="block text-sm font-bold text-gray-700 mb-2">Specialization</label>
->>>>>>> 15f2075 (Patien_View final ver)
-            <select
+            </label>            <select
               value={selectedSpecialization}
               onChange={(e) => setSelectedSpecialization(e.target.value)}
               className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:bg-white transition-all font-medium"
             >
-<<<<<<< HEAD
-              <option value="all">{allSpecsText}</option>
-=======
-              <option value="all">All Specializations</option>
->>>>>>> 15f2075 (Patien_View final ver)
-              {allSpecializations.map((spec) => (
+              <option value="all">{allSpecsText}</option>              {allSpecializations.map((spec) => (
                 <option key={spec} value={spec}>{spec}</option>
               ))}
             </select>
           </div>
 
           <div>
-<<<<<<< HEAD
             <label className="block text-sm font-bold text-gray-700 mb-2">
               <TranslatedText>City</TranslatedText>
-            </label>
-=======
-            <label className="block text-sm font-bold text-gray-700 mb-2">City</label>
->>>>>>> 15f2075 (Patien_View final ver)
-            <select
+            </label>            <select
               value={selectedCity}
               onChange={(e) => setSelectedCity(e.target.value)}
               className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:bg-white transition-all font-medium"
             >
-<<<<<<< HEAD
-              <option value="all">{allCitiesText}</option>
-=======
-              <option value="all">All Cities</option>
->>>>>>> 15f2075 (Patien_View final ver)
-              {allCities.map((city) => (
+              <option value="all">{allCitiesText}</option>              {allCities.map((city) => (
                 <option key={city} value={city}>{city}</option>
               ))}
             </select>
@@ -217,18 +174,11 @@ export default function FindDoctorsPage() {
         <div className="text-center py-16">
           <User className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <p className="text-gray-600 font-medium">
-<<<<<<< HEAD
             <TranslatedText>
               {searchTerm || selectedSpecialization !== 'all' || selectedCity !== 'all'
                 ? 'No doctors found matching your criteria'
                 : 'No doctors are currently available'}
-            </TranslatedText>
-=======
-            {searchTerm || selectedSpecialization !== 'all' || selectedCity !== 'all'
-              ? 'No doctors found matching your criteria'
-              : 'No doctors are currently available'}
->>>>>>> 15f2075 (Patien_View final ver)
-          </p>
+            </TranslatedText>          </p>
         </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -258,7 +208,6 @@ export default function FindDoctorsPage() {
                 </div>
 
                 {/* Bottom Info (Always Visible) */}
-<<<<<<< HEAD
                   <div className="absolute bottom-0 left-0 right-0 p-8 text-white z-10 translate-y-2 group-hover:translate-y-full transition-transform duration-300">
                   <div className="flex items-center space-x-2 mb-2">
                     <Award className="w-5 h-5 text-primary-300" />
@@ -270,44 +219,19 @@ export default function FindDoctorsPage() {
                     <TranslatedText>Dr.</TranslatedText> <TranslatedText>{doctor.user?.name || 'Doctor'}</TranslatedText>
                   </h3>
                   <p className="text-xs font-bold text-primary-100 tracking-wide mb-2">
-                    <TranslatedText>{doctor.qualification}</TranslatedText>
-=======
-                <div className="absolute bottom-0 left-0 right-0 p-8 text-white z-10 translate-y-2 group-hover:translate-y-full transition-transform duration-300">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Award className="w-5 h-5 text-primary-300" />
-                    <span className="text-xs font-bold tracking-wide bg-white/20 px-2 py-1 rounded-md backdrop-blur-md">
-                      {doctor.years_of_experience}y Experience
-                    </span>
-                  </div>
-                  <h3 className="text-3xl font-black mb-1 drop-shadow-md truncate">
-                    {doctor.user?.name || 'Doctor'}
-                  </h3>
-                  <p className="text-xs font-bold text-primary-100 tracking-wide mb-2">
-                    {doctor.qualification}
->>>>>>> 15f2075 (Patien_View final ver)
-                  </p>
+                    <TranslatedText>{doctor.qualification}</TranslatedText>                  </p>
                   <div className="flex flex-wrap gap-2 mb-3">
                     {doctor.specialization?.slice(0, 2).map((spec, idx) => (
                       <span
                         key={idx}
                         className="px-2 py-1 bg-white/20 backdrop-blur-md text-white rounded-full text-xs font-bold"
                       >
-<<<<<<< HEAD
-                        <TranslatedText>{spec}</TranslatedText>
-=======
-                        {spec}
->>>>>>> 15f2075 (Patien_View final ver)
-                      </span>
+                        <TranslatedText>{spec}</TranslatedText>                      </span>
                     ))}
                   </div>
                   {doctor.bio && (
                     <p className="text-gray-100 text-xs line-clamp-2 opacity-90">
-<<<<<<< HEAD
-                      <TranslatedText>{doctor.bio}</TranslatedText>
-=======
-                      {doctor.bio}
->>>>>>> 15f2075 (Patien_View final ver)
-                    </p>
+                      <TranslatedText>{doctor.bio}</TranslatedText>                    </p>
                   )}
                 </div>
 
@@ -323,16 +247,9 @@ export default function FindDoctorsPage() {
                     )}
                   </div>
                   
-<<<<<<< HEAD
                   <h3 className="text-white font-black text-2xl mb-1"><TranslatedText>Dr.</TranslatedText> <TranslatedText>{doctor.user?.name}</TranslatedText></h3>
                   <p className="text-primary-100 text-xs font-bold tracking-wide mb-2">
-                    <TranslatedText>{doctor.qualification}</TranslatedText>
-=======
-                  <h3 className="text-white font-black text-2xl mb-1">{doctor.user?.name}</h3>
-                  <p className="text-primary-100 text-xs font-bold tracking-wide mb-2">
-                    {doctor.qualification}
->>>>>>> 15f2075 (Patien_View final ver)
-                  </p>
+                    <TranslatedText>{doctor.qualification}</TranslatedText>                  </p>
                   
                   <div className="flex flex-wrap gap-2 justify-center mb-4">
                     {doctor.specialization?.slice(0, 3).map((spec, idx) => (
@@ -340,64 +257,34 @@ export default function FindDoctorsPage() {
                         key={idx}
                         className="px-3 py-1 bg-white/10 border border-white/20 text-white rounded-full text-xs font-bold"
                       >
-<<<<<<< HEAD
-                        <TranslatedText>{spec}</TranslatedText>
-=======
-                        {spec}
->>>>>>> 15f2075 (Patien_View final ver)
-                      </span>
+                        <TranslatedText>{spec}</TranslatedText>                      </span>
                     ))}
                     {remainingSpecs > 0 && (
                       <span className="px-3 py-1 bg-primary-500/30 border border-primary-300/50 text-primary-100 rounded-full text-xs font-bold">
-<<<<<<< HEAD
-                        +{remainingSpecs} <TranslatedText>more</TranslatedText>
-=======
-                        +{remainingSpecs} more
->>>>>>> 15f2075 (Patien_View final ver)
-                      </span>
+                        +{remainingSpecs} <TranslatedText>more</TranslatedText>                      </span>
                     )}
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 py-4 border-y border-white/10 w-full mb-6">
                     <div className="text-center">
                       <MapPin className="w-4 h-4 text-emerald-400 mx-auto mb-1" />
-<<<<<<< HEAD
                       <p className="text-xs font-bold text-gray-400 mb-1"><TranslatedText>Location</TranslatedText></p>
                       <p className="text-xs font-bold text-white truncate"><TranslatedText>{doctor.city}</TranslatedText>, <TranslatedText>{doctor.state}</TranslatedText></p>
                     </div>
                     <div className="text-center">
                       <div className="w-4 h-4 mx-auto mb-1 text-primary-400">🗣️</div>
                       <p className="text-xs font-bold text-gray-400 mb-1"><TranslatedText>Languages</TranslatedText></p>
-                      <p className="text-xs font-bold text-white truncate"><TranslatedText>{(doctor.languages || []).slice(0, 2).join(', ')}</TranslatedText></p>
-=======
-                      <p className="text-xs font-bold text-gray-400 mb-1">Location</p>
-                      <p className="text-xs font-bold text-white truncate">{doctor.city}, {doctor.state}</p>
-                    </div>
-                    <div className="text-center">
-                      <div className="w-4 h-4 mx-auto mb-1 text-primary-400">🗣️</div>
-                      <p className="text-xs font-bold text-gray-400 mb-1">Languages</p>
-                      <p className="text-xs font-bold text-white truncate">{(doctor.languages || []).slice(0, 2).join(', ')}</p>
->>>>>>> 15f2075 (Patien_View final ver)
-                    </div>
+                      <p className="text-xs font-bold text-white truncate"><TranslatedText>{(doctor.languages || []).slice(0, 2).join(', ')}</TranslatedText></p>                    </div>
                   </div>
 
                   <div className="w-full space-y-3">
                     <div className="flex items-baseline justify-center space-x-2 mb-3">
                       <span className="text-3xl font-black text-white">₹{doctor.consultation_fee}</span>
-<<<<<<< HEAD
                       <span className="text-xs text-gray-400"><TranslatedText>Consultation</TranslatedText></span>
                     </div>
                     
                     <div className="text-xs text-gray-400">
-                      <TranslatedText>Click to view full profile</TranslatedText>
-=======
-                      <span className="text-xs text-gray-400">Consultation</span>
-                    </div>
-                    
-                    <div className="text-xs text-gray-400">
-                      Click to view full profile
->>>>>>> 15f2075 (Patien_View final ver)
-                    </div>
+                      <TranslatedText>Click to view full profile</TranslatedText>                    </div>
                   </div>
                 </div>
               </div>
