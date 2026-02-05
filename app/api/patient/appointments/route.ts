@@ -80,3 +80,50 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ error: 'Failed to fetch appointments' }, { status: 500 });
     }
 }
+
+export async function POST(request: NextRequest) {
+    try {
+        const body = await request.json();
+        const { pid, did, scheduled_date, scheduled_time, mode, chief_complaint, symptoms, consultation_fee } = body;
+
+        // Basic validation
+        if (!pid || !did || !scheduled_date || !scheduled_time) {
+            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+        }
+
+        // Insert new appointment
+        const { data: appointment, error } = await supabase
+            .from('appointments')
+            .insert({
+                pid,
+                did,
+                scheduled_date,
+                scheduled_time,
+                mode: mode || 'online',
+                chief_complaint,
+                symptoms: symptoms || [],
+                status: 'scheduled',
+                created_at: new Date().toISOString()
+            })
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Appointment creation error:', error);
+            throw error;
+        }
+
+        return NextResponse.json({
+            success: true,
+            message: 'Appointment booked successfully',
+            appointment
+        });
+
+    } catch (error: any) {
+        console.error('Book appointment error:', error);
+        return NextResponse.json({ 
+            error: 'Failed to book appointment',
+            details: error.message 
+        }, { status: 500 });
+    }
+}

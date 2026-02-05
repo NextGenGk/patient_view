@@ -1,12 +1,24 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Poppins } from 'next/font/google';
 import { Alatsi } from 'next/font/google';
 import './globals.css';
 import { Toaster } from 'react-hot-toast';
 import { LanguageProvider } from './contexts/LanguageContext';
 
-const inter = Inter({ subsets: ['latin'] });
-const alatsi = Alatsi({ weight: '400', subsets: ['latin'] });
+const poppins = Poppins({ 
+  weight: ['300', '400', '500', '600', '700', '800'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-poppins',
+  fallback: ['system-ui', 'arial']
+});
+
+const alatsi = Alatsi({ 
+  weight: '400', 
+  subsets: ['latin'],
+  display: 'swap',
+  fallback: ['system-ui', 'arial']
+});
 
 export const metadata: Metadata = {
   title: 'AuraSutra - Ayurvedic Healthcare Platform',
@@ -24,8 +36,9 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
       </head>
-      <body className={inter.className}>
+      <body className={poppins.className}>
         <LanguageProvider>
           {children}
         </LanguageProvider>
