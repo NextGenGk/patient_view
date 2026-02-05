@@ -4,8 +4,219 @@ import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Calendar, Clock, Video, MapPin, User, Award, Loader2, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { TranslatedText } from '../../components/TranslatedText';      setSubmitting(false);
+import { TranslatedText } from '../../components/TranslatedText';
+
+export default function BookAppointmentPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const did = searchParams.get('did');
+
+  const [doctor, setDoctor] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [mode, setMode] = useState<'online' | 'offline'>('online');
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedTime, setSelectedTime] = useState('');
+  const [chiefComplaint, setChiefComplaint] = useState('');
+  const [symptoms, setSymptoms] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  useEffect(() => {
+    if (did) {
+      fetchDoctor();
     }
+  }, [did]);
+
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      if ((window as any).Razorpay) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  };
+
+  async function fetchDoctor() {
+    try {
+      const response = await fetch(`/api/doctors/${did}`);
+      const data = await response.json();
+      if (data.success) {
+        setDoctor(data.doctor);
+      } else {
+        toast.error('Doctor not found');
+        router.push('/dashboard');
+      }
+    } catch (error) {
+      console.error('Error fetching doctor:', error);
+      toast.error('Failed to load doctor details');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setSubmitting(true);
+
+    try {
+      // 0. Load Razorpay Script
+      const isLoaded = await loadRazorpayScript();
+      if (!isLoaded) {
+        toast.error('Failed to load payment gateway. Please check your internet connection.');
+        setSubmitting(false);
+        return;
+      }
+
+      // 1. Sync user & Get profile
+      const syncResponse = await fetch('/api/sync-user');
+      const { user } = await syncResponse.json();
+
+      const profileResponse = await fetch(`/api/patient/profile?uid=${user.uid}`);
+      const profileData = await profileResponse.json();
+
+      if (!profileData.success || !profileData.patient) {
+        toast.error('Please complete your profile first');
+        router.push('/dashboard/profile');
+        setSubmitting(false);
+        return;
+      }
+
+      const pid = profileData.patient.pid;
+
+      // 2. Create Razorpay Order
+      const orderResponse = await fetch('/api/payments/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: doctor.consultation_fee,
+          currency: 'INR',
+          receipt: `apt_${Date.now()}`,
+          notes: {
+             pid: pid,
+             did: did,
+             consultation_type: mode
+          }
+        }),
+      });
+
+      const orderData = await orderResponse.json();
+
+      if (!orderData.success) {
+        toast.error(orderData.error || 'Failed to create payment order');
+        setSubmitting(false);
+        return;
+      }
+
+      // 3. Initialize Razorpay Checkout
+      console.log('Initializing Razorpay with order:', orderData.order.id);
+      
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: orderData.order.amount,
+        currency: orderData.order.currency,
+        name: "AuraSutra",
+        description: `Consultation with Dr. ${doctor.user.name}`,
+        image: "/Logos/logo_transparent.png",
+        order_id: orderData.order.id,
+        handler: async function (response: any) {
+             console.log('Payment successful, verifying...');
+          try {
+            // 4. Verify Payment
+            const verifyResponse = await fetch('/api/payments/verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature
+              }),
+            });
+
+            const verifyData = await verifyResponse.json();
+
+            if (verifyData.success) {
+               // 5. Book Appointment on Success
+               await bookAppointment(pid, doctor.consultation_fee); // Pass fee for record keeping if we add transaction later
+            } else {
+               toast.error('Payment verification failed');
+               setSubmitting(false);
+            }
+          } catch (error) {
+             console.error('Verification error:', error);
+             toast.error('Payment verification failed');
+             setSubmitting(false);
+          }
+        },
+        prefill: {
+          name: profileData.patient.emergency_contact_name || user.name, // Use user name as fallback
+          email: user.email,
+          contact: profileData.patient.emergency_contact_phone || user.phone || ""
+        },
+        theme: {
+          color: "#10B981" // Emerald-500
+        },
+        modal: {
+            ondismiss: function() {
+                setSubmitting(false);
+                toast('Payment cancelled', { icon: '⚠️' });
+            }
+        }
+      };
+
+      const paymentObject = new (window as any).Razorpay(options);
+      paymentObject.open();
+
+    } catch (error) {
+      console.error('Error initiating payment:', error);
+      toast.error('Failed to initiate payment');
+      setSubmitting(false);
+    }
+  }
+
+  async function bookAppointment(pid: string, amount: number) {
+      try {
+        const appointmentData = {
+            pid,
+            did,
+            scheduled_date: selectedDate,
+            scheduled_time: selectedTime,
+            mode,
+            chief_complaint: chiefComplaint,
+            symptoms: symptoms ? symptoms.split(',').map(s => s.trim()) : [],
+            // consultation_fee: amount // Removed as per schema fix
+        };
+
+        const response = await fetch('/api/patient/appointments', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(appointmentData),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            setShowSuccess(true);
+            setTimeout(() => {
+                router.push('/dashboard/appointments');
+            }, 2000);
+        } else {
+            toast.error(data.error || 'Failed to book appointment');
+        }
+      } catch (error) {
+          console.error('Booking error:', error);
+          toast.error('Failed to complete booking after payment');
+      } finally {
+          setSubmitting(false);
+      }
   }
 
   // Generate time slots (9 AM - 5 PM, 30-minute intervals)
@@ -83,7 +294,7 @@ import { TranslatedText } from '../../components/TranslatedText';      setSubmit
               <Award className="w-4 h-4" />
               <span className="font-medium"><TranslatedText>{doctor.qualification}</TranslatedText></span>            </div>
             <div className="flex flex-wrap gap-2 mb-3">
-              {doctor.specialization?.slice(0, 3).map((spec, idx) => (
+              {doctor.specialization?.slice(0, 3).map((spec: string, idx: number) => (
                 <span
                   key={idx}
                   className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium"
@@ -243,6 +454,23 @@ import { TranslatedText } from '../../components/TranslatedText';      setSubmit
             🔒 Secure payment powered by Razorpay
           </p>
         </div>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          disabled={submitting}
+          className="w-full py-4 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-xl font-bold text-lg hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] smooth-transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+        >
+          {submitting ? (
+            <>
+              <Loader2 className="w-6 h-6 animate-spin" />
+              <TranslatedText as="span">Processing Payment...</TranslatedText>
+            </>
+          ) : (
+            <>
+              <TranslatedText as="span">Confirm Booking & Pay</TranslatedText>
+              <CheckCircle2 className="w-5 h-5" />
+            </>
           )}
         </button>
       </form>
